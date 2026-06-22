@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedHome — Hackathon Pitch Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   RESET
+   ============================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --red:#E53935;--red-accent:#FF6B6B;--red-deep:#B71C1C;
+  --red-soft:rgba(229,57,53,0.12);--red-border:rgba(229,57,53,0.25);
+  --bg:#0A0A0A;--bg2:#111;--card:#141414;
+  --border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.12);
+  --t1:#FFF;--t2:#A0A0A0;--t3:#555;
+  --r-sm:8px;--r-md:12px;--r-lg:16px;--r-xl:24px;--r-full:9999px;
+}
+
+html,body{width:100%;height:100%;overflow:hidden;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  -webkit-font-smoothing:antialiased;background:var(--bg);color:var(--t1);
+}
+body{background-image:
+  radial-gradient(at 0% 0%,rgba(229,57,53,0.06) 0px,transparent 50%),
+  radial-gradient(at 100% 100%,rgba(229,57,53,0.04) 0px,transparent 50%);
+  background-attachment:fixed;
+}
+
+/* ============================================
+   PRINT / PDF EXPORT STYLES
+   ============================================ */
+@media print {
+  html,body{overflow:visible!important;background:#0A0A0A!important;
+    -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;
+  }
+  .slide{
+    position:relative!important;opacity:1!important;pointer-events:auto!important;
+    transform:none!important;page-break-after:always;page-break-inside:avoid;
+    width:100vw!important;height:100vh!important;
+    display:flex!important;flex-direction:column!important;
+    align-items:center!important;justify-content:center!important;
+  }
+  .slide:last-child{page-break-after:auto}
+  .progress-nav,.slide-number,.controls-hint,.toolbar,.deck-overlay{display:none!important}
+  @page{size:landscape;margin:0}
+}
+
+/* ============================================
+   SLIDE ENGINE
+   ============================================ */
+.deck{position:relative;width:100vw;height:100vh}
+.slide{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:48px 72px;
+  opacity:0;transform:translateY(28px) scale(0.98);
+  transition:opacity .55s cubic-bezier(.4,0,.2,1),transform .55s cubic-bezier(.4,0,.2,1);
+  pointer-events:none;z-index:0;
+}
+.slide.active{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;z-index:1}
+.slide.exit-up{opacity:0;transform:translateY(-36px) scale(0.97)}
+
+/* ============================================
+   TOOLBAR (top bar)
+   ============================================ */
+.toolbar{
+  position:fixed;top:0;left:0;right:0;height:48px;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;padding:0 24px;
+  background:rgba(10,10,10,0.85);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.toolbar-left{display:flex;align-items:center;gap:16px}
+.toolbar-logo{font-size:14px;font-weight:900;letter-spacing:-0.02em}
+.toolbar-divider{width:1px;height:18px;background:var(--border-s)}
+.toolbar-title{font-size:11px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:0.06em}
+.toolbar-right{display:flex;align-items:center;gap:8px}
+.toolbar-btn{
+  padding:6px 14px;border-radius:var(--r-sm);font-size:11px;font-weight:600;
+  cursor:pointer;transition:all .2s;border:1px solid var(--border);
+  background:rgba(255,255,255,0.04);color:var(--t2);font-family:inherit;
+}
+.toolbar-btn:hover{background:rgba(255,255,255,0.08);color:var(--t1)}
+.toolbar-btn-primary{
+  background:linear-gradient(135deg,#E53935,#FF6B6B);color:#fff;border:none;
+  box-shadow:0 2px 8px rgba(229,57,53,0.3);
+}
+.toolbar-btn-primary:hover{box-shadow:0 4px 16px rgba(229,57,53,0.4);transform:translateY(-1px)}
+
+/* ============================================
+   BOTTOM NAV
+   ============================================ */
+.progress-nav{position:fixed;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.04);z-index:999}
+.progress-fill{height:100%;background:linear-gradient(90deg,#E53935,#FF6B6B);transition:width .5s cubic-bezier(.4,0,.2,1);border-radius:0 3px 3px 0}
+
+.slide-number{
+  position:fixed;bottom:20px;right:36px;font-size:12px;font-weight:600;
+  color:var(--t3);letter-spacing:0.05em;z-index:999;font-variant-numeric:tabular-nums;
+}
+.controls-hint{
+  position:fixed;bottom:18px;left:36px;display:flex;align-items:center;gap:8px;
+  font-size:10px;color:var(--t3);font-weight:500;z-index:999;
+}
+.key-hint{
+  display:inline-flex;align-items:center;justify-content:center;padding:2px 6px;
+  border-radius:3px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);
+  font-size:9px;font-weight:600;color:var(--t2);
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+h1{font-weight:900;letter-spacing:-0.04em;line-height:1.05}
+h2{font-weight:800;letter-spacing:-0.035em;line-height:1.1}
+h3{font-weight:700;letter-spacing:-0.02em;line-height:1.2}
+
+.text-gradient{
+  background:linear-gradient(135deg,#E53935 0%,#FF6B6B 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* ============================================
+   COMPONENTS
+   ============================================ */
+.glass{
+  background:rgba(20,20,20,0.8);border:1px solid var(--border);border-radius:var(--r-lg);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:0 4px 24px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.red-glow{
+  background:rgba(229,57,53,0.05);border:1px solid rgba(229,57,53,0.15);
+  border-radius:var(--r-lg);box-shadow:0 0 24px rgba(229,57,53,0.08);
+}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:var(--r-full);
+  font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;
+  background:var(--red-soft);color:var(--red-accent);border:1px solid rgba(229,57,53,0.2);
+}
+.criteria-tag{
+  display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--r-full);
+  font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;
+  background:rgba(229,57,53,0.08);color:var(--red-accent);border:1px solid rgba(229,57,53,0.12);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes glow-pulse{0%,100%{box-shadow:0 0 20px rgba(229,57,53,0.2)}50%{box-shadow:0 0 50px rgba(229,57,53,0.4),0 0 100px rgba(229,57,53,0.1)}}
+@keyframes fade-in-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fade-in-scale{from{opacity:0;transform:scale(0.92)}to{opacity:1;transform:scale(1)}}
+@keyframes slide-in-right{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+@keyframes radar-scan{0%{transform:scale(0.8);opacity:0.8}100%{transform:scale(2.5);opacity:0}}
+@keyframes draw-connector{from{width:0}to{width:100%}}
+@keyframes pulse-ring{0%{transform:scale(1);opacity:0.5}100%{transform:scale(1.6);opacity:0}}
+
+.anim-fu{animation:fade-in-up .65s ease-out both}
+.anim-fs{animation:fade-in-scale .55s ease-out both}
+.anim-sr{animation:slide-in-right .6s ease-out both}
+.anim-float{animation:float 3s ease-in-out infinite}
+.anim-glow{animation:glow-pulse 2.5s ease-in-out infinite}
+
+.d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}
+.d4{animation-delay:.4s}.d5{animation-delay:.5s}.d6{animation-delay:.6s}
+.d7{animation-delay:.7s}.d8{animation-delay:.8s}.d9{animation-delay:.9s}.d10{animation-delay:1s}
+
+/* ============================================
+   SLIDE LAYOUTS
+   ============================================ */
+
+/* — Hero — */
+.hero-split{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;width:100%;max-width:1160px}
+.hero-copy{text-align:left}
+.hero-subtitle{font-size:14px;color:var(--t2);line-height:1.7;max-width:420px;font-weight:400;margin-bottom:28px}
+
+.mockup-frame{
+  position:relative;width:100%;aspect-ratio:16/10;border-radius:var(--r-xl);overflow:hidden;
+  background:linear-gradient(145deg,#141414,#1A1A1A);border:1px solid var(--border-s);
+  box-shadow:0 32px 80px rgba(0,0,0,0.6),0 0 60px rgba(229,57,53,0.06);
+}
+.mockup-chrome{
+  height:30px;display:flex;align-items:center;gap:5px;padding:0 12px;
+  background:rgba(255,255,255,0.03);border-bottom:1px solid var(--border);
+}
+.dot{width:7px;height:7px;border-radius:50%}
+.dot-r{background:#FF5F57}.dot-y{background:#FEBC2E}.dot-g{background:#28C840}
+.mockup-content{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;
+  background:radial-gradient(at 30% 20%,rgba(229,57,53,0.08) 0%,transparent 60%),
+             radial-gradient(at 80% 80%,rgba(229,57,53,0.05) 0%,transparent 60%);
+}
+.mockup-mini-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:260px}
+.mockup-mini{
+  padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);font-size:9px;font-weight:600;color:var(--t2);
+  display:flex;align-items:center;gap:5px;
+}
+.mockup-mini-icon{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:9px}
+.team-row{display:flex;gap:16px;align-items:center}
+.team-person{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--t2);font-weight:500}
+.team-avatar{
+  width:26px;height:26px;border-radius:50%;
+  background:linear-gradient(135deg,var(--red),var(--red-accent));
+  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;
+}
+
+/* — Problem — */
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;width:100%;max-width:880px}
+.problem-card{padding:28px 24px;text-align:left;transition:all .25s}
+.problem-card:hover{transform:translateY(-3px);border-color:var(--red-border)!important}
+.problem-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px;background:rgba(229,57,53,0.1)}
+.problem-card h3{font-size:15px;margin-bottom:6px;font-weight:800}
+.problem-card p{font-size:12px;color:var(--t2);line-height:1.6;font-weight:400}
+
+/* — Solution Flow — */
+.flow-vertical{display:flex;flex-direction:column;align-items:center;gap:0;width:100%;max-width:500px}
+.flow-node{
+  display:flex;align-items:center;gap:14px;width:100%;
+  padding:14px 20px;border-radius:var(--r-md);
+  background:rgba(255,255,255,0.02);border:1px solid var(--border);
+  transition:all .25s;
+}
+.flow-node:hover{border-color:var(--red-border);background:rgba(229,57,53,0.03)}
+.flow-node-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;background:rgba(229,57,53,0.08);flex-shrink:0}
+.flow-node h4{font-size:13px;font-weight:700}
+.flow-node p{font-size:10px;color:var(--t3);margin-top:2px}
+.flow-connector{width:2px;height:18px;background:linear-gradient(180deg,rgba(229,57,53,0.3),rgba(229,57,53,0.08));border-radius:2px}
+
+/* — Innovation — */
+.innovation-split{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;width:100%;max-width:1060px}
+.compare-col{text-align:left}
+.compare-col h3{font-size:14px;font-weight:800;margin-bottom:16px;text-transform:uppercase;letter-spacing:0.04em}
+.compare-item{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r-md);
+  font-size:12px;font-weight:600;margin-bottom:8px;
+}
+.compare-old{background:rgba(255,255,255,0.02);border:1px solid var(--border);color:var(--t2);text-decoration:line-through;opacity:0.6}
+.compare-new{background:rgba(229,57,53,0.06);border:1px solid rgba(229,57,53,0.15);color:var(--t1)}
+.compare-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+
+/* — Stats — */
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;width:100%;max-width:1080px}
+.stat-box{padding:28px 16px;text-align:center;position:relative;overflow:hidden}
+.stat-box::before{content:'';position:absolute;top:-36px;right:-36px;width:90px;height:90px;border-radius:50%;background:rgba(229,57,53,0.05);filter:blur(24px)}
+.stat-num{font-size:36px;font-weight:900;letter-spacing:-0.03em;margin-bottom:6px}
+.stat-lbl{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:0.06em}
+.stat-sub{font-size:9px;color:var(--t3);margin-top:6px;font-weight:500}
+
+/* — Architecture — */
+.arch-stack{display:flex;flex-direction:column;align-items:center;gap:0;width:100%;max-width:900px}
+.arch-layer{
+  width:100%;padding:18px 28px;border-radius:var(--r-md);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.arch-layer h4{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em}
+.arch-layer p{font-size:11px;color:var(--t2);font-weight:500}
+.arch-layer-accent h4{color:var(--red-accent)}
+.arch-pipe{width:2px;height:22px;background:linear-gradient(180deg,rgba(229,57,53,0.35),rgba(229,57,53,0.08));border-radius:2px}
+.arch-sub-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;width:100%;margin-top:4px}
+.arch-sub{
+  padding:10px 16px;border-radius:var(--r-sm);text-align:center;
+  min-width:100px;
+}
+.arch-sub h5{font-size:11px;font-weight:700;margin-bottom:2px}
+.arch-sub p{font-size:9px;color:var(--t3);font-weight:500}
+
+/* — UX Showcase — */
+.ux-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%;max-width:1060px}
+.ux-card{overflow:hidden;text-align:left;transition:all .25s}
+.ux-card:hover{transform:translateY(-3px);border-color:var(--red-border)!important}
+.ux-preview{
+  width:100%;aspect-ratio:16/10;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden;
+  background:radial-gradient(at 30% 30%,rgba(229,57,53,0.06) 0%,transparent 70%),linear-gradient(135deg,#111,#141414);
+}
+.ux-preview-icon{font-size:26px;opacity:0.5}
+.ux-label{padding:12px 14px;font-size:11px;font-weight:700;color:var(--t1);border-top:1px solid var(--border)}
+.ux-label span{font-size:9px;color:var(--t3);display:block;margin-top:1px;font-weight:500}
+
+/* — Impact — */
+.impact-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:880px}
+.impact-card{padding:28px 24px;text-align:left;display:flex;align-items:flex-start;gap:16px;transition:all .25s}
+.impact-card:hover{transform:translateY(-3px);border-color:var(--red-border)!important}
+.impact-icon{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;background:rgba(229,57,53,0.1)}
+.impact-card h3{font-size:14px;font-weight:800;margin-bottom:4px}
+.impact-card p{font-size:11px;color:var(--t2);line-height:1.6}
+
+/* — Timeline — */
+.timeline{display:flex;align-items:flex-start;width:100%;max-width:1080px;position:relative}
+.timeline-line{position:absolute;top:22px;left:36px;right:36px;height:2px;background:linear-gradient(90deg,var(--red),rgba(229,57,53,0.12));border-radius:2px}
+.timeline-node{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;padding:0 10px}
+.timeline-dot{
+  width:14px;height:14px;border-radius:50%;border:3px solid var(--red);
+  background:var(--bg);margin-bottom:16px;position:relative;z-index:2;
+}
+.timeline-dot.now{background:var(--red);box-shadow:0 0 16px rgba(229,57,53,0.4)}
+.timeline-phase{font-size:9px;font-weight:700;color:var(--red-accent);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.timeline-node h3{font-size:13px;font-weight:800;margin-bottom:4px}
+.timeline-node p{font-size:10px;color:var(--t3);line-height:1.5}
+
+/* — Why slide — */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%;max-width:900px}
+.why-card{padding:22px 18px;text-align:center;transition:all .25s}
+.why-card:hover{transform:translateY(-3px);border-color:var(--red-border)!important}
+.why-icon{font-size:22px;margin-bottom:10px}
+.why-card h3{font-size:12px;font-weight:800;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.03em}
+.why-card p{font-size:10px;color:var(--t3);line-height:1.5}
+
+/* — Thank You — */
+.ty-container{display:flex;flex-direction:column;align-items:center;text-align:center;gap:24px}
+.ty-glow{position:relative;display:inline-block}
+.ty-glow::before{
+  content:'';position:absolute;inset:-40px;border-radius:50%;
+  background:radial-gradient(circle,rgba(229,57,53,0.15) 0%,transparent 70%);filter:blur(40px);
+}
+.ty-divider{width:56px;height:2px;background:linear-gradient(90deg,var(--red),var(--red-accent));border-radius:2px}
+.ty-links{display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.ty-link{font-size:11px;color:var(--t3);display:flex;align-items:center;gap:5px}
+.ty-link span{color:var(--red-accent)}
+
+/* ============================================
+   QR CODE (CSS-drawn placeholder)
+   ============================================ */
+.qr-box{
+  width:100px;height:100px;border-radius:var(--r-md);
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  padding:8px;position:relative;
+}
+.qr-inner{
+  width:100%;height:100%;border-radius:6px;
+  background:repeating-conic-gradient(#000 0% 25%, #fff 0% 50%) 0 0 / 12px 12px;
+  display:flex;align-items:center;justify-content:center;
+}
+.qr-center{
+  width:28px;height:28px;background:#fff;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:900;color:var(--red);
+}
+</style>
+</head>
+<body>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <div class="toolbar-left">
+    <div class="toolbar-logo">Med<span class="text-gradient">Home</span></div>
+    <div class="toolbar-divider"></div>
+    <div class="toolbar-title">Hackathon Pitch Deck</div>
+  </div>
+  <div class="toolbar-right">
+    <button class="toolbar-btn" onclick="toggleFullscreen()" id="fsBtn">⛶ Present</button>
+    <button class="toolbar-btn toolbar-btn-primary" onclick="downloadPDF()">↓ Download PDF</button>
+  </div>
+</div>
+
+<!-- Progress -->
+<div class="progress-nav"><div class="progress-fill" id="progressFill"></div></div>
+<div class="slide-number" id="slideNum">01 / 12</div>
+<div class="controls-hint">
+  <span class="key-hint">←</span><span class="key-hint">→</span><span>Navigate</span>
+  <span style="margin-left:4px" class="key-hint">F</span><span>Fullscreen</span>
+</div>
+
+<div class="deck" id="deck">
+
+<!-- =============================================
+     SLIDE 1 — HERO
+     Criteria: Overall Presentation
+     ============================================= -->
+<div class="slide active" id="slide-1">
+  <div class="hero-split">
+    <div class="hero-copy">
+      <div class="badge anim-fu" style="margin-bottom:20px">
+        <span style="font-size:12px">🏥</span> National Hackathon 2026
+      </div>
+      <h1 style="font-size:60px;margin-bottom:14px" class="anim-fu d2">
+        MED<span class="text-gradient">HOME</span>
+      </h1>
+      <p style="font-size:20px;color:var(--t2);font-weight:400;line-height:1.45;margin-bottom:6px" class="anim-fu d3">
+        AI-Powered Healthcare.<br>
+        <span style="color:var(--t3)">Built for Every Home.</span>
+      </p>
+      <p class="hero-subtitle anim-fu d4">
+        A unified platform that simplifies symptom analysis, doctor discovery, hospital discovery, emergency assistance, and appointment booking.
+      </p>
+      <div class="team-row anim-fu d5">
+        <div class="team-person">
+          <div class="team-avatar">A</div>
+          <div>
+            <div style="font-weight:700;color:var(--t1);font-size:12px">Aryan</div>
+            <div style="font-size:9px;color:var(--t3)">Full Stack Developer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mockup-frame anim-fs d3 anim-float" style="display:flex;flex-direction:column">
+      <div class="mockup-chrome"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><span style="margin-left:auto;font-size:8px;color:var(--t3);font-weight:600">medhome.app</span></div>
+      <div class="mockup-content" style="flex:1">
+        <div style="font-size:24px;font-weight:900;letter-spacing:-0.03em">Med<span class="text-gradient">Home</span></div>
+        <div style="font-size:9px;color:var(--t2);text-transform:uppercase;letter-spacing:0.06em;font-weight:600">AI-Powered Healthcare Navigation</div>
+        <div class="mockup-mini-cards">
+          <div class="mockup-mini"><div class="mockup-mini-icon" style="background:rgba(229,57,53,0.12)">🔍</div>Symptoms</div>
+          <div class="mockup-mini"><div class="mockup-mini-icon" style="background:rgba(59,130,246,0.12)">🩺</div>Doctors</div>
+          <div class="mockup-mini"><div class="mockup-mini-icon" style="background:rgba(16,185,129,0.12)">🏥</div>Hospitals</div>
+          <div class="mockup-mini"><div class="mockup-mini-icon" style="background:rgba(245,158,11,0.12)">🚨</div>Emergency</div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <div style="padding:5px 14px;border-radius:16px;background:linear-gradient(135deg,#E53935,#FF6B6B);font-size:9px;font-weight:700;color:#fff">Get Started</div>
+          <div style="padding:5px 14px;border-radius:16px;background:rgba(255,255,255,0.05);border:1px solid var(--border);font-size:9px;font-weight:600;color:var(--t2)">Learn More</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 2 — PROBLEM
+     Criteria: User Impact, Creativity
+     ============================================= -->
+<div class="slide" id="slide-2">
+  <div class="criteria-tag anim-fu" style="margin-bottom:16px">Judging: User Impact</div>
+  <h2 style="font-size:44px;text-align:center;margin-bottom:6px" class="anim-fu d1">
+    Healthcare Navigation is <span class="text-gradient">Fragmented</span>
+  </h2>
+  <p style="font-size:14px;color:var(--t2);text-align:center;margin-bottom:40px;max-width:520px" class="anim-fu d2">
+    Millions of patients navigate a broken system — losing time, money, and health.
+  </p>
+  <div class="problem-grid">
+    <div class="glass problem-card anim-fu d3">
+      <div class="problem-icon">🔍</div>
+      <h3>Wrong Specialist</h3>
+      <p>Patients visit 3–4 wrong doctors before reaching the right specialist — delaying treatment and increasing costs.</p>
+    </div>
+    <div class="glass problem-card anim-fu d4">
+      <div class="problem-icon">🏥</div>
+      <h3>Hospital Discovery</h3>
+      <p>No unified platform to find hospitals with real-time ICU bed availability during medical emergencies.</p>
+    </div>
+    <div class="glass problem-card anim-fu d5">
+      <div class="problem-icon">📋</div>
+      <h3>Scattered Information</h3>
+      <p>Healthcare data spread across clinics, labs, and paper files — making informed decisions nearly impossible.</p>
+    </div>
+    <div class="glass problem-card anim-fu d6">
+      <div class="problem-icon">🚨</div>
+      <h3>Emergency Delays</h3>
+      <p>Critical seconds are lost finding the nearest facility with available beds during life-threatening situations.</p>
+    </div>
+  </div>
+  <p style="font-size:13px;color:var(--t2);text-align:center;margin-top:32px;max-width:480px;line-height:1.6" class="anim-fu d7">
+    Healthcare should be <span style="color:var(--red-accent);font-weight:700">intelligent</span>, <span style="color:var(--red-accent);font-weight:700">accessible</span>, and <span style="color:var(--red-accent);font-weight:700">connected</span>.
+  </p>
+</div>
+
+<!-- =============================================
+     SLIDE 3 — SOLUTION
+     Criteria: Usability
+     ============================================= -->
+<div class="slide" id="slide-3">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;width:100%;max-width:1000px">
+    <div style="text-align:left">
+      <div class="criteria-tag anim-fu" style="margin-bottom:14px">Judging: Usability</div>
+      <h2 style="font-size:42px;margin-bottom:10px" class="anim-fu d1">
+        Introducing<br>Med<span class="text-gradient">Home</span>
+      </h2>
+      <p style="font-size:13px;color:var(--t2);line-height:1.7;max-width:380px" class="anim-fu d2">
+        One platform that transforms your symptoms into a complete healthcare action plan — from AI analysis to appointment booking.
+      </p>
+    </div>
+    <div class="flow-vertical anim-fu d3">
+      <div class="flow-node"><div class="flow-node-icon">📝</div><div><h4>Enter Symptoms</h4><p>Text or voice input in English & Hindi</p></div></div>
+      <div class="flow-connector"></div>
+      <div class="flow-node"><div class="flow-node-icon">🧠</div><div><h4>AI Analysis</h4><p>Knowledge-base powered disease prediction</p></div></div>
+      <div class="flow-connector"></div>
+      <div class="flow-node"><div class="flow-node-icon">🎯</div><div><h4>Specialist Recommendation</h4><p>Right doctor specialty matched to diagnosis</p></div></div>
+      <div class="flow-connector"></div>
+      <div class="flow-node"><div class="flow-node-icon">🩺</div><div><h4>Doctor Discovery</h4><p>Verified profiles with availability data</p></div></div>
+      <div class="flow-connector"></div>
+      <div class="flow-node"><div class="flow-node-icon">🏥</div><div><h4>Hospital Discovery</h4><p>ABDM facilities with real-time bed data</p></div></div>
+      <div class="flow-connector"></div>
+      <div class="flow-node"><div class="flow-node-icon">📅</div><div><h4>Appointment Booking</h4><p>Instant scheduling with role-based access</p></div></div>
+      <div class="flow-connector"></div>
+      <div class="flow-node" style="border-color:rgba(255,59,48,0.2)"><div class="flow-node-icon" style="background:rgba(255,59,48,0.12)">🚨</div><div><h4>Emergency Assistance</h4><p>One-tap SOS with nearest facility routing</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 4 — INNOVATION
+     Criteria: Innovation, Creativity
+     ============================================= -->
+<div class="slide" id="slide-4">
+  <div class="criteria-tag anim-fu" style="margin-bottom:16px">Judging: Innovation & Creativity</div>
+  <h2 style="font-size:44px;text-align:center;margin-bottom:40px" class="anim-fu d1">
+    What Makes MedHome <span class="text-gradient">Different?</span>
+  </h2>
+  <div class="innovation-split">
+    <div class="compare-col anim-fu d2">
+      <h3 style="color:var(--t3)">❌ Traditional Healthcare</h3>
+      <div class="compare-item compare-old"><div class="compare-icon" style="background:rgba(255,255,255,0.04)">🔀</div>Visit multiple doctors to find the right one</div>
+      <div class="compare-item compare-old"><div class="compare-icon" style="background:rgba(255,255,255,0.04)">🤷</div>No explanation of AI diagnosis</div>
+      <div class="compare-item compare-old"><div class="compare-icon" style="background:rgba(255,255,255,0.04)">📱</div>Separate apps for each healthcare service</div>
+      <div class="compare-item compare-old"><div class="compare-icon" style="background:rgba(255,255,255,0.04)">⏱️</div>Manual emergency response</div>
+      <div class="compare-item compare-old"><div class="compare-icon" style="background:rgba(255,255,255,0.04)">📊</div>Black-box symptom checkers</div>
+    </div>
+    <div class="compare-col anim-fu d3">
+      <h3 style="color:var(--red-accent)">✓ MedHome</h3>
+      <div class="compare-item compare-new"><div class="compare-icon" style="background:rgba(229,57,53,0.12)">🎯</div>AI matches you to the right specialist instantly</div>
+      <div class="compare-item compare-new"><div class="compare-icon" style="background:rgba(229,57,53,0.12)">📋</div>Explainable AI reports with confidence scores</div>
+      <div class="compare-item compare-new"><div class="compare-icon" style="background:rgba(229,57,53,0.12)">🔗</div>Unified healthcare journey — one platform</div>
+      <div class="compare-item compare-new"><div class="compare-icon" style="background:rgba(229,57,53,0.12)">🚨</div>One-tap SOS with live ICU bed tracking</div>
+      <div class="compare-item compare-new"><div class="compare-icon" style="background:rgba(229,57,53,0.12)">🧠</div>Transparent knowledge-based reasoning engine</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 5 — IMPLEMENTATION
+     Criteria: Implementation Quality
+     ============================================= -->
+<div class="slide" id="slide-5">
+  <div class="criteria-tag anim-fu" style="margin-bottom:16px">Judging: Implementation Quality</div>
+  <h2 style="font-size:44px;text-align:center;margin-bottom:8px" class="anim-fu d1">
+    Built with <span class="text-gradient">Real Data</span>
+  </h2>
+  <p style="font-size:13px;color:var(--t2);text-align:center;margin-bottom:44px;max-width:460px" class="anim-fu d2">
+    Not mock data. MedHome runs on actual Indian healthcare open datasets and a live Supabase backend.
+  </p>
+  <div class="stats-row">
+    <div class="glass stat-box anim-fu d3">
+      <div class="stat-num text-gradient" data-count="5132">0</div>
+      <div class="stat-lbl">Hospitals</div>
+      <div class="stat-sub">ABDM HFR Registered</div>
+    </div>
+    <div class="glass stat-box anim-fu d4">
+      <div class="stat-num" style="color:var(--t1)" data-count="1000">0</div>
+      <div class="stat-lbl">Doctors</div>
+      <div class="stat-sub">Verified Profiles</div>
+    </div>
+    <div class="glass stat-box anim-fu d5">
+      <div class="stat-num text-gradient" data-count="642">0</div>
+      <div class="stat-lbl">Symptom Maps</div>
+      <div class="stat-sub">Disease-Symptom Pairs</div>
+    </div>
+    <div class="glass stat-box anim-fu d6">
+      <div class="stat-num" style="color:var(--t1)" data-count="41">0</div>
+      <div class="stat-lbl">Disease Modules</div>
+      <div class="stat-sub">Knowledge Base</div>
+    </div>
+    <div class="glass stat-box anim-fu d7">
+      <div class="stat-num text-gradient" data-count="133">0</div>
+      <div class="stat-lbl">Severity Rules</div>
+      <div class="stat-sub">Clinical Indicators</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:24px;margin-top:36px;flex-wrap:wrap;justify-content:center" class="anim-fu d8">
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3)"><span style="color:var(--red-accent)">●</span> Live Supabase PostgreSQL</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3)"><span style="color:var(--red-accent)">●</span> Government Open Data</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3)"><span style="color:var(--red-accent)">●</span> OpenStreetMap Integration</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3)"><span style="color:var(--red-accent)">●</span> Real-Time Data Sync</div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 6 — ARCHITECTURE
+     Criteria: Architecture, Technical Feasibility
+     ============================================= -->
+<div class="slide" id="slide-6">
+  <div class="criteria-tag anim-fu" style="margin-bottom:16px">Judging: Architecture & Technical Feasibility</div>
+  <h2 style="font-size:44px;text-align:center;margin-bottom:40px" class="anim-fu d1">
+    Designed for <span class="text-gradient">Reliability</span>
+  </h2>
+  <div class="arch-stack">
+    <div class="glass arch-layer anim-fu d2" style="padding:20px 32px">
+      <div><h4 style="color:var(--red-accent)">Frontend Application</h4><p>React 18 + TypeScript + Vite + Tailwind CSS v4 + Framer Motion</p></div>
+      <div style="font-size:9px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:0.05em">Client Layer</div>
+    </div>
+    <div class="arch-pipe anim-fu d3"></div>
+    <div class="glass arch-layer anim-fu d4" style="padding:20px 32px">
+      <div><h4 style="color:var(--red-accent)">Supabase Backend</h4><p>PostgreSQL + Auth + Row Level Security + Real-Time Subscriptions</p></div>
+      <div style="font-size:9px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:0.05em">Backend Layer</div>
+    </div>
+    <div class="arch-pipe anim-fu d5"></div>
+    <div class="red-glow arch-layer anim-fu d6" style="padding:20px 32px">
+      <div><h4 style="color:var(--red-accent)">Healthcare Intelligence Engine</h4><p>Symptom Analysis • Disease Prediction • Severity Scoring • Specialist Matching</p></div>
+      <div style="font-size:9px;color:var(--red-accent);font-weight:600;text-transform:uppercase;letter-spacing:0.05em">AI Layer</div>
+    </div>
+    <div class="arch-pipe anim-fu d7"></div>
+    <div class="arch-sub-row anim-fu d8">
+      <div class="glass arch-sub"><h5>🏥 Hospitals</h5><p>5,132+ ABDM facilities</p></div>
+      <div class="glass arch-sub"><h5>🩺 Doctors</h5><p>1,000+ verified profiles</p></div>
+      <div class="glass arch-sub"><h5>🧬 Disease KB</h5><p>41 knowledge modules</p></div>
+      <div class="glass arch-sub"><h5>📅 Appointments</h5><p>Real-time booking sync</p></div>
+      <div class="glass arch-sub"><h5>🗺️ Maps</h5><p>OpenStreetMap + Leaflet</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 7 — USER EXPERIENCE
+     Criteria: Usability
+     ============================================= -->
+<div class="slide" id="slide-7">
+  <div class="criteria-tag anim-fu" style="margin-bottom:16px">Judging: Usability & Presentation</div>
+  <h2 style="font-size:44px;text-align:center;margin-bottom:40px" class="anim-fu d1">
+    From Symptoms to <span class="text-gradient">Healthcare Decisions</span>
+  </h2>
+  <div class="ux-grid">
+    <div class="glass ux-card anim-fu d2">
+      <div class="ux-preview">
+        <div class="ux-preview-icon">🧠</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:center;padding:0 16px">
+          <span style="padding:2px 7px;border-radius:12px;background:rgba(229,57,53,0.1);border:1px solid rgba(229,57,53,0.2);font-size:8px;color:var(--red-accent);font-weight:600">Headache</span>
+          <span style="padding:2px 7px;border-radius:12px;background:rgba(229,57,53,0.1);border:1px solid rgba(229,57,53,0.2);font-size:8px;color:var(--red-accent);font-weight:600">Fever</span>
+          <span style="padding:2px 7px;border-radius:12px;background:rgba(229,57,53,0.1);border:1px solid rgba(229,57,53,0.2);font-size:8px;color:var(--red-accent);font-weight:600">Fatigue</span>
+        </div>
+      </div>
+      <div class="ux-label">AI Symptom Checker <span>Voice + text, English & Hindi</span></div>
+    </div>
+    <div class="glass ux-card anim-fu d3">
+      <div class="ux-preview">
+        <div class="ux-preview-icon">📊</div>
+        <div style="display:flex;flex-direction:column;gap:4px;width:60%;align-items:stretch">
+          <div style="display:flex;align-items:center;gap:6px;font-size:8px;color:var(--t2)"><span style="flex:1;height:5px;border-radius:3px;background:linear-gradient(90deg,#E53935 85%,rgba(255,255,255,0.06) 85%)"></span>85%</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:8px;color:var(--t2)"><span style="flex:1;height:5px;border-radius:3px;background:linear-gradient(90deg,#FF6B6B 62%,rgba(255,255,255,0.06) 62%)"></span>62%</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:8px;color:var(--t2)"><span style="flex:1;height:5px;border-radius:3px;background:linear-gradient(90deg,rgba(229,57,53,0.4) 38%,rgba(255,255,255,0.06) 38%)"></span>38%</div>
+        </div>
+      </div>
+      <div class="ux-label">Explainable AI Report <span>Confidence scores & reasoning</span></div>
+    </div>
+    <div class="glass ux-card anim-fu d4">
+      <div class="ux-preview">
+        <div class="ux-preview-icon">🩺</div>
+        <div style="display:flex;flex-direction:column;gap:3px;width:60%">
+          <div style="height:6px;border-radius:3px;background:rgba(229,57,53,0.15);width:100%"></div>
+          <div style="height:6px;border-radius:3px;background:rgba(229,57,53,0.1);width:80%"></div>
+          <div style="height:6px;border-radius:3px;background:rgba(229,57,53,0.07);width:55%"></div>
+        </div>
+      </div>
+      <div class="ux-label">Doctor Finder <span>Specialization-filtered results</span></div>
+    </div>
+    <div class="glass ux-card anim-fu d5">
+      <div class="ux-preview">
+        <div style="width:80%;height:55%;border-radius:6px;background:rgba(255,255,255,0.03);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+          <div style="font-size:20px">🗺️</div>
+          <div style="position:absolute;width:7px;height:7px;border-radius:50%;background:var(--red);top:28%;left:38%;box-shadow:0 0 8px rgba(229,57,53,0.5)"></div>
+          <div style="position:absolute;width:5px;height:5px;border-radius:50%;background:var(--red-accent);top:50%;left:58%"></div>
+          <div style="position:absolute;width:5px;height:5px;border-radius:50%;background:var(--red-accent);top:62%;left:32%"></div>
+        </div>
+      </div>
+      <div class="ux-label">Hospital Finder <span>Interactive map with ICU beds</span></div>
+    </div>
+    <div class="glass ux-card anim-fu d6">
+      <div class="ux-preview">
+        <div class="ux-preview-icon">📈</div>
+        <div style="display:flex;gap:6px;align-items:flex-end">
+          <div style="width:14px;height:24px;border-radius:3px 3px 0 0;background:rgba(229,57,53,0.3)"></div>
+          <div style="width:14px;height:38px;border-radius:3px 3px 0 0;background:rgba(229,57,53,0.5)"></div>
+          <div style="width:14px;height:28px;border-radius:3px 3px 0 0;background:rgba(229,57,53,0.35)"></div>
+          <div style="width:14px;height:48px;border-radius:3px 3px 0 0;background:linear-gradient(180deg,#E53935,#FF6B6B)"></div>
+          <div style="width:14px;height:20px;border-radius:3px 3px 0 0;background:rgba(229,57,53,0.2)"></div>
+        </div>
+      </div>
+      <div class="ux-label">Health Dashboard <span>AI insights & recovery plans</span></div>
+    </div>
+    <div class="glass ux-card anim-fu d7">
+      <div class="ux-preview">
+        <div style="position:relative;width:52px;height:52px">
+          <div style="position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,59,48,0.3)"></div>
+          <div style="position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,59,48,0.12);animation:radar-scan 2s infinite"></div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:20px">🚨</div>
+        </div>
+        <div style="font-size:8px;color:var(--t3);text-transform:uppercase;letter-spacing:0.06em;margin-top:4px">One-Tap Emergency</div>
+      </div>
+      <div class="ux-label">Emergency SOS <span>Nearest hospital routing</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 8 — USER IMPACT
+     Criteria: User Impact
+     ============================================= -->
+<div class="slide" id="slide-8">
+  <div class="criteria-tag anim-fu" style="margin-bottom:16px">Judging: User Impact</div>
+  <h2 style="font-size:44px;text-align:center;margin-bottom:8px" class="anim-fu d1">
+    Creating Real <span class="text-gradient">Healthcare Value</span>
+  </h2>
+  <p style="font-size:13px;color:var(--t2);text-align:center;margin-bottom:40px;max-width:440px" class="anim-fu d2">
+    MedHome delivers measurable value at every step of the patient journey.
+  </p>
+  <div class="impact-grid">
+    <div class="glass impact-card anim-fu d3">
+      <div class="impact-icon">⚡</div>
+      <div><h3>Faster Access</h3><p>Reduce the average 3–4 doctor visits to find the right specialist down to a single informed consultation.</p></div>
+    </div>
+    <div class="glass impact-card anim-fu d4">
+      <div class="impact-icon">🧭</div>
+      <div><h3>Reduced Confusion</h3><p>AI-guided healthcare navigation replaces the guesswork with data-driven, explainable decisions.</p></div>
+    </div>
+    <div class="glass impact-card anim-fu d5">
+      <div class="impact-icon">🚨</div>
+      <div><h3>Emergency Ready</h3><p>Real-time ICU bed tracking and one-tap SOS saves critical minutes during life-threatening emergencies.</p></div>
+    </div>
+    <div class="glass impact-card anim-fu d6">
+      <div class="impact-icon">🤝</div>
+      <div><h3>Inclusive Design</h3><p>Voice input in Hindi and English ensures accessibility for non-English speaking populations across India.</p></div>
+    </div>
+  </div>
+  <div style="margin-top:32px;text-align:center" class="anim-fu d7">
+    <p style="font-size:13px;color:var(--t3);max-width:440px;line-height:1.6;margin:0 auto">
+      <span style="color:var(--red-accent);font-weight:700">One platform</span> eliminates the friction between patients and quality healthcare.
+    </p>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 9 — SCALABILITY
+     Criteria: Scalability
+     ============================================= -->
+<div class="slide" id="slide-9">
+  <div class="criteria-tag anim-fu" style="margin-bottom:16px">Judging: Scalability</div>
+  <h2 style="font-size:44px;text-align:center;margin-bottom:48px" class="anim-fu d1">
+    Designed to <span class="text-gradient">Scale</span>
+  </h2>
+  <div class="timeline">
+    <div class="timeline-line"></div>
+    <div class="timeline-node anim-fu d2">
+      <div class="timeline-dot now"></div>
+      <div class="timeline-phase">Phase 1 — Now</div>
+      <h3>Current MVP</h3>
+      <p>AI symptom checker, doctor & hospital finder, appointments, emergency SOS, voice input</p>
+    </div>
+    <div class="timeline-node anim-fu d3">
+      <div class="timeline-dot"></div>
+      <div class="timeline-phase">Phase 2</div>
+      <h3>Telemedicine</h3>
+      <p>Video consultations, digital prescriptions, real-time doctor chat</p>
+    </div>
+    <div class="timeline-node anim-fu d4">
+      <div class="timeline-dot"></div>
+      <div class="timeline-phase">Phase 3</div>
+      <h3>Voice Assistant</h3>
+      <p>Conversational health AI in 10+ Indian regional languages</p>
+    </div>
+    <div class="timeline-node anim-fu d5">
+      <div class="timeline-dot"></div>
+      <div class="timeline-phase">Phase 4</div>
+      <h3>Wearables</h3>
+      <p>Smartwatch integration for continuous vitals monitoring</p>
+    </div>
+    <div class="timeline-node anim-fu d6">
+      <div class="timeline-dot"></div>
+      <div class="timeline-phase">Phase 5</div>
+      <h3>National System</h3>
+      <p>ABDM ABHA integration — India's unified health ecosystem</p>
+    </div>
+  </div>
+  <div style="margin-top:40px;text-align:center" class="anim-fu d7">
+    <p style="font-size:12px;color:var(--t3);max-width:440px;line-height:1.6;margin:0 auto">
+      Modular architecture enables incremental feature additions without rewriting existing systems.
+    </p>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 10 — LIVE SHOWCASE
+     Criteria: Presentation Quality
+     ============================================= -->
+<div class="slide" id="slide-10">
+  <div class="criteria-tag anim-fu" style="margin-bottom:16px">Judging: Presentation Quality</div>
+  <h2 style="font-size:44px;text-align:center;margin-bottom:40px" class="anim-fu d1">
+    MedHome <span class="text-gradient">in Action</span>
+  </h2>
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;width:100%;max-width:1060px;height:360px">
+    <!-- Large main mockup -->
+    <div class="glass anim-fu d2" style="overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r-lg)">
+      <div style="height:28px;display:flex;align-items:center;gap:4px;padding:0 10px;background:rgba(255,255,255,0.03);border-bottom:1px solid var(--border);flex-shrink:0">
+        <div class="dot dot-r" style="width:6px;height:6px"></div>
+        <div class="dot dot-y" style="width:6px;height:6px"></div>
+        <div class="dot dot-g" style="width:6px;height:6px"></div>
+        <span style="margin-left:auto;font-size:8px;color:var(--t3);font-weight:600">localhost:5173</span>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;background:radial-gradient(at 30% 30%,rgba(229,57,53,0.06) 0%,transparent 60%)">
+        <div style="font-size:28px;font-weight:900;letter-spacing:-0.03em">Med<span class="text-gradient">Home</span></div>
+        <p style="font-size:11px;color:var(--t2);text-align:center;max-width:280px;line-height:1.6">AI-Powered Healthcare Navigation Platform — Live Product Demo</p>
+        <div style="display:flex;gap:8px">
+          <div style="padding:6px 16px;border-radius:16px;background:linear-gradient(135deg,#E53935,#FF6B6B);font-size:10px;font-weight:700;color:#fff">Check Symptoms</div>
+          <div style="padding:6px 16px;border-radius:16px;background:rgba(255,255,255,0.05);border:1px solid var(--border);font-size:10px;font-weight:600;color:var(--t2)">Find Doctors</div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:4px">
+          <div style="font-size:9px;color:var(--t3)">🏥 5,132 Hospitals</div>
+          <div style="font-size:9px;color:var(--t3)">🩺 1,000 Doctors</div>
+          <div style="font-size:9px;color:var(--t3)">🧠 AI Analysis</div>
+        </div>
+      </div>
+    </div>
+    <!-- Side stack -->
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="glass anim-fu d3" style="flex:1;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border-radius:var(--r-lg)">
+        <div style="font-size:20px">🧠</div>
+        <div style="font-size:10px;font-weight:700;text-align:center">AI Analysis</div>
+        <div style="font-size:8px;color:var(--t3);text-align:center">Explainable diagnosis with confidence scores</div>
+      </div>
+      <div class="glass anim-fu d4" style="flex:1;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border-radius:var(--r-lg)">
+        <div style="font-size:20px">🗺️</div>
+        <div style="font-size:10px;font-weight:700;text-align:center">Hospital Map</div>
+        <div style="font-size:8px;color:var(--t3);text-align:center">Interactive map with real-time ICU beds</div>
+      </div>
+      <div class="glass anim-fu d5" style="flex:1;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border-radius:var(--r-lg);border-color:rgba(255,59,48,0.15)!important">
+        <div style="font-size:20px">🚨</div>
+        <div style="font-size:10px;font-weight:700;text-align:center;color:var(--red-accent)">Emergency Mode</div>
+        <div style="font-size:8px;color:var(--t3);text-align:center">One-tap SOS alert system</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 11 — WHY MEDHOME
+     Criteria: ALL — Summary
+     ============================================= -->
+<div class="slide" id="slide-11">
+  <div class="criteria-tag anim-fu" style="margin-bottom:16px">All Judging Criteria</div>
+  <h2 style="font-size:44px;text-align:center;margin-bottom:40px" class="anim-fu d1">
+    Why Med<span class="text-gradient">Home</span> Matters
+  </h2>
+  <div class="why-grid">
+    <div class="glass why-card anim-fu d2">
+      <div class="why-icon">💡</div>
+      <h3>Innovation</h3>
+      <p>Unified AI healthcare journey — symptoms to specialist to appointment in one flow</p>
+    </div>
+    <div class="glass why-card anim-fu d3">
+      <div class="why-icon">⚙️</div>
+      <h3>Technical Feasibility</h3>
+      <p>Production-grade stack with Supabase, React 18, TypeScript, real-time sync</p>
+    </div>
+    <div class="glass why-card anim-fu d4">
+      <div class="why-icon">📈</div>
+      <h3>Scalability</h3>
+      <p>Modular architecture designed for telemedicine, wearables, and national scale</p>
+    </div>
+    <div class="glass why-card anim-fu d5">
+      <div class="why-icon">👥</div>
+      <h3>User Impact</h3>
+      <p>Reduces specialist discovery from 3–4 visits to one informed consultation</p>
+    </div>
+    <div class="glass why-card anim-fu d6">
+      <div class="why-icon">🏗️</div>
+      <h3>Implementation</h3>
+      <p>5,132+ real hospitals, 1,000+ doctors, 642 symptom maps — live database</p>
+    </div>
+    <div class="glass why-card anim-fu d7">
+      <div class="why-icon">🎨</div>
+      <h3>Creativity</h3>
+      <p>Explainable AI, voice input in Hindi, glassmorphic design system</p>
+    </div>
+    <div class="glass why-card anim-fu d8">
+      <div class="why-icon">✨</div>
+      <h3>Usability</h3>
+      <p>Premium dark-first UI with light mode, Framer Motion animations</p>
+    </div>
+    <div class="glass why-card anim-fu d9">
+      <div class="why-icon">🧩</div>
+      <h3>Architecture</h3>
+      <p>Layered design: Frontend → Auth → AI Engine → Data → Maps</p>
+    </div>
+    <div class="glass why-card anim-fu d10">
+      <div class="why-icon">🎯</div>
+      <h3>Presentation</h3>
+      <p>Startup-grade pitch with live demo, real data, and clear storytelling</p>
+    </div>
+  </div>
+  <p style="font-size:14px;color:var(--t2);text-align:center;margin-top:32px;max-width:540px;line-height:1.6" class="anim-fu d10">
+    MedHome transforms fragmented healthcare services into <span style="color:var(--red-accent);font-weight:700">one intelligent healthcare ecosystem</span>.
+  </p>
+</div>
+
+<!-- =============================================
+     SLIDE 12 — THANK YOU
+     Criteria: Overall Presentation
+     ============================================= -->
+<div class="slide" id="slide-12">
+  <div class="ty-container">
+    <div class="ty-glow anim-fs">
+      <h1 style="font-size:72px;position:relative">MED<span class="text-gradient">HOME</span></h1>
+    </div>
+    <p style="font-size:20px;color:var(--t2);font-weight:400;line-height:1.45" class="anim-fu d2">
+      AI-Powered Healthcare.<br>
+      <span style="color:var(--t3)">Built for Every Home.</span>
+    </p>
+    <div class="ty-divider anim-fu d3"></div>
+    <div class="team-row anim-fu d4" style="justify-content:center">
+      <div class="team-person">
+        <div class="team-avatar">A</div>
+        <div style="text-align:left">
+          <div style="font-weight:700;color:var(--t1);font-size:13px">Aryan</div>
+          <div style="font-size:9px;color:var(--t3)">Developer & Designer</div>
+        </div>
+      </div>
+    </div>
+    <div class="ty-links anim-fu d5">
+      <div class="ty-link"><span>●</span> React + TypeScript</div>
+      <div class="ty-link"><span>●</span> Supabase Backend</div>
+      <div class="ty-link"><span>●</span> Open Healthcare Data</div>
+      <div class="ty-link"><span>●</span> Live Product Demo</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:24px;margin-top:8px" class="anim-fu d6">
+      <div class="qr-box">
+        <div class="qr-inner"><div class="qr-center">M</div></div>
+      </div>
+      <div style="text-align:left">
+        <div style="font-size:11px;font-weight:700;color:var(--t1);margin-bottom:4px">Scan to view MVP</div>
+        <div style="font-size:10px;color:var(--t3)">medhome.app</div>
+        <div style="font-size:10px;color:var(--t3);margin-top:2px">github.com/aryan/medhome</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;padding:12px 28px;border-radius:var(--r-full);background:linear-gradient(135deg,#E53935,#FF6B6B);font-size:14px;font-weight:700;color:#fff;box-shadow:0 4px 16px rgba(229,57,53,0.3)" class="anim-fu d7">
+      🚀 Thank You
+    </div>
+  </div>
+</div>
+
+</div><!-- end deck -->
+
+<script>
+// ============================================
+// PRESENTATION ENGINE
+// ============================================
+const TOTAL = 12;
+let current = 1;
+
+function goto(n) {
+  if (n < 1 || n > TOTAL) return;
+  const prev = document.getElementById('slide-' + current);
+  const next = document.getElementById('slide-' + n);
+  if (!prev || !next) return;
+
+  if (n > current) { prev.classList.remove('active'); prev.classList.add('exit-up'); }
+  else { prev.classList.remove('active'); prev.style.opacity = '0'; prev.style.transform = 'translateY(28px) scale(0.98)'; }
+
+  setTimeout(() => { prev.classList.remove('exit-up'); prev.style.opacity = ''; prev.style.transform = ''; }, 550);
+
+  next.classList.add('active');
+  current = n;
+  updateUI();
+  if (n === 5) animateCounters();
+}
+
+function updateUI() {
+  document.getElementById('slideNum').textContent = String(current).padStart(2, '0') + ' / ' + String(TOTAL).padStart(2, '0');
+  document.getElementById('progressFill').style.width = ((current / TOTAL) * 100) + '%';
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goto(current + 1); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goto(current - 1); }
+  if (e.key === 'Home') { e.preventDefault(); goto(1); }
+  if (e.key === 'End') { e.preventDefault(); goto(TOTAL); }
+  if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+});
+
+// Click navigation
+document.getElementById('deck').addEventListener('click', e => {
+  if (e.target.closest('button') || e.target.closest('a') || e.target.closest('.toolbar')) return;
+  if (e.clientX / window.innerWidth > 0.5) goto(current + 1);
+  else goto(current - 1);
+});
+
+// Touch swipe
+let tx = 0;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+document.addEventListener('touchend', e => { const d = tx - e.changedTouches[0].clientX; if (Math.abs(d) > 50) d > 0 ? goto(current + 1) : goto(current - 1); });
+
+// Fullscreen
+function toggleFullscreen() {
+  if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); document.getElementById('fsBtn').textContent = '✕ Exit'; }
+  else { document.exitFullscreen(); document.getElementById('fsBtn').textContent = '⛶ Present'; }
+}
+
+// Counter animation (Slide 5)
+function animateCounters() {
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const target = parseInt(el.dataset.count);
+    const dur = 2000, start = performance.now();
+    el.textContent = '0';
+    function tick(now) {
+      const p = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(eased * target).toLocaleString() + (target >= 100 ? '+' : '');
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}
+
+// PDF Download
+function downloadPDF() {
+  // Show all slides for print, then trigger print dialog
+  const slides = document.querySelectorAll('.slide');
+  slides.forEach(s => { s.dataset.wasActive = s.classList.contains('active'); s.classList.add('active'); });
+  
+  setTimeout(() => {
+    window.print();
+    // Restore after print
+    setTimeout(() => {
+      slides.forEach(s => {
+        if (s.dataset.wasActive !== 'true') s.classList.remove('active');
+        delete s.dataset.wasActive;
+      });
+    }, 1000);
+  }, 200);
+}
+
+updateUI();
+</script>
+</body>
+</html>

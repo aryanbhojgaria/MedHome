@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedHome — Technical Documentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   RESET & SYSTEM VARIABLE SYSTEM
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --red: #E53935;
+  --red-accent: #FF6B6B;
+  --red-deep: #B71C1C;
+  --red-soft: rgba(229, 57, 53, 0.08);
+  --red-border: rgba(229, 57, 53, 0.2);
+  --bg: #0A0A0C;
+  --bg2: #111115;
+  --card: #15151A;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-s: rgba(255, 255, 255, 0.12);
+  --t1: #FFFFFF;
+  --t2: #9A9AA4;
+  --t3: #5A5A65;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg);
+  color: var(--t1);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  padding-top: 50px;
+}
+
+/* Subtle glowing background decorations */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 10%;
+  width: 60%;
+  height: 400px;
+  background: radial-gradient(circle, rgba(229, 57, 53, 0.04) 0%, transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   TOP BAR / TOOLBAR
+   ========================================================================== */
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: rgba(10, 10, 12, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 1000;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toolbar-logo {
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.toolbar-logo span {
+  background: linear-gradient(135deg, var(--red), var(--red-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--border-s);
+}
+
+.toolbar-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--t2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.toolbar-btn {
+  background: linear-gradient(135deg, var(--red), var(--red-accent));
+  color: #FFFFFF;
+  border: none;
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 10px rgba(229, 57, 53, 0.3);
+}
+
+.toolbar-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(229, 57, 53, 0.45);
+}
+
+/* ==========================================================================
+   DOCUMENT LAYOUT
+   ========================================================================== */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  position: relative;
+  z-index: 10;
+}
+
+/* Cover page styling */
+.cover {
+  text-align: center;
+  padding: 100px 0 80px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 60px;
+  position: relative;
+}
+
+.cover-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: var(--red-soft);
+  color: var(--red-accent);
+  border: 1px solid var(--red-border);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 20px;
+}
+
+.cover h1 {
+  font-size: 54px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  margin-bottom: 12px;
+}
+
+.cover h1 span {
+  background: linear-gradient(135deg, var(--red) 30%, var(--red-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cover-subtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--t2);
+  margin-bottom: 30px;
+}
+
+.cover-meta {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--t3);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+/* Sections & Typography */
+h2 {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 60px 0 20px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--t1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h2 span.section-num {
+  color: var(--red-accent);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 28px 0 12px;
+  color: var(--t1);
+}
+
+p {
+  font-size: 13.5px;
+  color: var(--t2);
+  margin-bottom: 16px;
+  line-height: 1.65;
+}
+
+strong {
+  color: var(--t1);
+  font-weight: 600;
+}
+
+ul {
+  margin-left: 20px;
+  margin-bottom: 20px;
+  color: var(--t2);
+  font-size: 13.5px;
+}
+
+li {
+  margin-bottom: 8px;
+}
+
+/* ==========================================================================
+   TABLES & COMPONENT GRID
+   ========================================================================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0 32px;
+  font-size: 12.5px;
+  background: var(--bg2);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+th, td {
+  padding: 12px 16px;
+  text-align: left;
+}
+
+th {
+  background-color: rgba(255, 255, 255, 0.02);
+  font-weight: 700;
+  color: var(--t1);
+  border-bottom: 1px solid var(--border-s);
+  text-transform: uppercase;
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+}
+
+td {
+  border-bottom: 1px solid var(--border);
+  color: var(--t2);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* Code & Preformatted */
+pre {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 16px 20px;
+  overflow-x: auto;
+  margin: 20px 0;
+}
+
+code {
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  font-size: 12px;
+  color: var(--red-accent);
+}
+
+pre code {
+  color: var(--t2);
+  font-size: 12.5px;
+}
+
+/* Index / Table of Contents */
+.toc-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 30px;
+  margin-bottom: 60px;
+}
+
+.toc-title {
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+  color: var(--t1);
+  border-left: 3px solid var(--red);
+  padding-left: 10px;
+}
+
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 24px;
+}
+
+.toc-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--t2);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.toc-link:hover {
+  color: var(--red-accent);
+}
+
+.toc-link span {
+  font-weight: 700;
+  color: var(--red-accent);
+}
+
+/* Schema Grid Layout */
+.schema-block {
+  margin-bottom: 24px;
+  padding: 16px 20px;
+  border-radius: var(--r-md);
+  background: var(--bg2);
+  border: 1px solid var(--border);
+}
+
+.schema-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 6px;
+}
+
+.schema-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--red-accent);
+}
+
+.schema-desc {
+  font-size: 11px;
+  color: var(--t3);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.schema-list {
+  list-style: none;
+  margin-left: 0;
+  font-size: 12.5px;
+}
+
+.schema-list li {
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.schema-type {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--t3);
+}
+
+/* Architecture Flow Diagrams */
+.flow-diagram {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 24px;
+  text-align: center;
+  margin: 20px 0;
+  overflow-x: auto;
+}
+
+.flow-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  color: var(--t2);
+  white-space: pre;
+  text-align: left;
+  display: inline-block;
+  line-height: 1.45;
+}
+
+/* Section Page Break Marker (For Printing Layout) */
+.page-section {
+  position: relative;
+}
+
+/* ==========================================================================
+   PRINT / PDF STYLES (Targeting exactly 6-7 portrait printed pages)
+   ========================================================================== */
+@media print {
+  @page {
+    size: portrait;
+    margin: 15mm 15mm 15mm 15mm;
+  }
+  
+  body {
+    background-color: #FFFFFF !important;
+    color: #111115 !important;
+    padding-top: 0 !important;
+    font-size: 11.5px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  body::before {
+    display: none !important;
+  }
+  
+  .toolbar {
+    display: none !important;
+  }
+  
+  .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  
+  /* COVER PAGE (Page 1) */
+  .cover {
+    height: 90vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+    page-break-after: always !important;
+    padding: 0 !important;
+  }
+  
+  .cover h1 {
+    font-size: 40px !important;
+    color: #0A0A0C !important;
+  }
+  
+  .cover h1 span {
+    -webkit-text-fill-color: initial !important;
+    color: #E53935 !important;
+  }
+  
+  .cover-subtitle {
+    color: #5A5A65 !important;
+    font-size: 16px !important;
+  }
+  
+  .cover-badge {
+    background: #FFEBEE !important;
+    color: #B71C1C !important;
+    border: 1px solid #FFCDD2 !important;
+  }
+  
+  .toc-box {
+    display: none !important; /* Hide TOC on print since pages are static */
+  }
+  
+  /* PAGE BREAK PLAN
+     Page 1: Cover Page
+     Page 2: 1. Executive Summary, 2. Problem Statement, 3. Proposed Solution
+     Page 3: 4. Objectives, 5. System Overview, 6. Technology Stack
+     Page 4: 7. Database Design (Schemas Part 1)
+     Page 5: 7. Database Design (Schemas Part 2), 8. System Architecture
+     Page 6: 9. AI Health Analysis Engine, 10. Implementation Details, 11. Key Features
+     Page 7: 12. UX Design, 13. Scalability, 14. Security, 15. Social Impact, 16. Conclusion
+  ============================================================= */
+  
+  .pb-page2 { page-break-before: always !important; }
+  .pb-page3 { page-break-before: always !important; }
+  .pb-page4 { page-break-before: always !important; }
+  .pb-page5 { page-break-before: always !important; }
+  .pb-page6 { page-break-before: always !important; }
+  .pb-page7 { page-break-before: always !important; }
+  
+  h2 {
+    font-size: 16px !important;
+    margin: 28px 0 12px !important;
+    border-bottom: 2px solid #E53935 !important;
+    color: #0A0A0C !important;
+    padding-bottom: 4px !important;
+  }
+  
+  h3 {
+    font-size: 12px !important;
+    margin: 18px 0 8px !important;
+    color: #0A0A0C !important;
+  }
+  
+  p, li, ul {
+    color: #2E2E35 !important;
+    font-size: 11px !important;
+    line-height: 1.5 !important;
+  }
+  
+  table {
+    background: #FFFFFF !important;
+    border: 1px solid #E5E5EA !important;
+    font-size: 10px !important;
+  }
+  
+  th {
+    background: #F4F4F9 !important;
+    border-bottom: 2px solid #E5E5EA !important;
+    color: #111115 !important;
+  }
+  
+  td {
+    border-bottom: 1px solid #F0F0F5 !important;
+    color: #2E2E35 !important;
+  }
+  
+  .schema-block {
+    background: #FFFFFF !important;
+    border: 1px solid #E5E5EA !important;
+  }
+  
+  .schema-name {
+    color: #B71C1C !important;
+  }
+  
+  .schema-type {
+    color: #5A5A65 !important;
+  }
+  
+  .flow-diagram {
+    background: #F4F4F9 !important;
+    border: 1px solid #E5E5EA !important;
+  }
+  
+  .flow-code {
+    color: #111115 !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Top Fixed Toolbar -->
+<div class="toolbar">
+  <div class="toolbar-left">
+    <div class="toolbar-logo">Med<span>Home</span></div>
+    <div class="toolbar-divider"></div>
+    <div class="toolbar-title">Technical Documentation Report</div>
+  </div>
+  <button class="toolbar-btn" onclick="window.print()">↓ Download PDF</button>
+</div>
+
+<div class="container">
+
+  <!-- ================= PAGE 1 ================= -->
+  <div class="cover">
+    <div class="cover-badge">National Hackathon 2026 Submission</div>
+    <h1>Med<span>Home</span></h1>
+    <div class="cover-subtitle">AI-Powered Healthcare. Built for Every Home.</div>
+    <div class="cover-meta">
+      System Design & Technical Architecture Documentation<br>
+      Aryan — Lead Full Stack Engineer &nbsp;|&nbsp; June 2026
+    </div>
+  </div>
+
+  <!-- TABLE OF CONTENTS (Web Screen Only) -->
+  <div class="toc-box">
+    <div class="toc-title">Table of Contents</div>
+    <div class="toc-grid">
+      <a href="#1-executive-summary" class="toc-link"><span>01</span> Executive Summary</a>
+      <a href="#9-ai-health-analysis-engine" class="toc-link"><span>09</span> AI Health Analysis Engine</a>
+      <a href="#2-problem-statement" class="toc-link"><span>02</span> Problem Statement</a>
+      <a href="#10-implementation-details" class="toc-link"><span>10</span> Implementation Details</a>
+      <a href="#3-proposed-solution" class="toc-link"><span>03</span> Proposed Solution</a>
+      <a href="#11-key-features" class="toc-link"><span>11</span> Key Features</a>
+      <a href="#4-objectives" class="toc-link"><span>04</span> Objectives</a>
+      <a href="#12-user-experience-design" class="toc-link"><span>12</span> User Experience Design</a>
+      <a href="#5-system-overview" class="toc-link"><span>05</span> System Overview</a>
+      <a href="#13-scalability" class="toc-link"><span>13</span> Scalability</a>
+      <a href="#6-technology-stack" class="toc-link"><span>06</span> Technology Stack</a>
+      <a href="#14-security-considerations" class="toc-link"><span>14</span> Security Considerations</a>
+      <a href="#7-database-design" class="toc-link"><span>07</span> Database Design</a>
+      <a href="#15-social-impact" class="toc-link"><span>15</span> Social Impact</a>
+      <a href="#8-system-architecture" class="toc-link"><span>08</span> System Architecture</a>
+      <a href="#16-conclusion" class="toc-link"><span>06</span> Conclusion</a>
+    </div>
+  </div>
+
+  <!-- ================= PAGE 2 ================= -->
+  <div class="page-section pb-page2" id="page-2">
+    <h2 id="1-executive-summary"><span class="section-num">01</span> Executive Summary</h2>
+    <p>MedHome is a healthcare navigation platform that connects patients to the right doctors, hospitals, and emergency services through a single, intelligent interface. The platform ingests a patient's symptoms, runs them through a knowledge-base-driven analysis engine, and produces actionable healthcare decisions — from identifying the probable condition and recommending the correct specialist, to surfacing nearby hospitals with real-time ICU bed availability and enabling instant appointment booking.</p>
+    <p>The core thesis behind MedHome is simple: healthcare in India is not lacking in supply — it is fragmented in access. Patients routinely visit three to four wrong specialists before reaching the right one, not because doctors are unavailable, but because patients lack the tools to make informed initial decisions. MedHome eliminates that gap.</p>
+    <p>The platform is built on actual Indian healthcare datasets — 5,132 ABDM-registered hospital facilities, 1,000 verified doctor profiles, 642 symptom-disease relationships, 41 disease knowledge modules, and 133 severity indicators. The backend runs on Supabase (PostgreSQL), the frontend is built with React 19 and TypeScript, and geographic services use OpenStreetMap with Leaflet.js. The result is a working product — not a prototype — that can be deployed, tested, and scaled.</p>
+
+    <h2 id="2-problem-statement"><span class="section-num">02</span> Problem Statement</h2>
+    <p>Healthcare navigation in India is fundamentally fragmented. While the country has over 70,000 hospitals and 1.3 million registered doctors, the path from symptoms to treatment remains disconnected and confusing for most patients.</p>
+    <h3>Core Challenges</h3>
+    <ul>
+      <li><strong>Specialist Identification Failure:</strong> A patient presenting with recurring headaches, dizziness, and blurred vision may consult a general physician, then an ophthalmologist, then a cardiologist — before finally being referred to a neurologist. Each visit costs money, takes time, and delays proper treatment. There is no widely accessible tool that maps symptom clusters to the correct specialist.</li>
+      <li><strong>Hospital Discovery:</strong> When a patient needs emergency care, the question is not whether a hospital exists — it is whether the nearest hospital has available ICU beds, an emergency department that is currently operational, and the right infrastructure for the patient's condition. This information is scattered across individual hospital websites, phone lines, and word-of-mouth networks.</li>
+      <li><strong>Information Fragmentation:</strong> A patient's medical history, previous diagnoses, doctor visits, and test results live across multiple clinics, labs, and paper files. No unified view exists for the patient to reference or share with a new provider.</li>
+      <li><strong>Emergency Response Delays:</strong> During a cardiac event or accident, critical minutes are lost determining which facility to approach. There is no consumer-facing platform that combines real-time bed availability with proximity-based routing.</li>
+    </ul>
+
+    <h2 id="3-proposed-solution"><span class="section-num">03</span> Proposed Solution</h2>
+    <p>MedHome addresses these problems by unifying the entire healthcare navigation journey into one platform. The user journey follows a structured pipeline:</p>
+    <div class="flow-diagram">
+      <div class="flow-code">Symptom Input → Disease Matching → Severity Scoring → Specialist Recommendation
+    → Doctor Discovery → Hospital Discovery → Appointment Booking → Emergency Support</div>
+    </div>
+    <ul>
+      <li><strong>Symptom Input:</strong> Patients enter their symptoms through text input or voice dictation (supporting English and Hindi). The system autocompletes against a database of 642 known symptom-disease mappings.</li>
+      <li><strong>AI Analysis:</strong> The symptom analysis engine matches the patient's symptoms against all known disease profiles in the knowledge base. Each disease receives a match score based on the number of overlapping symptoms and the total symptom count for that disease.</li>
+      <li><strong>Specialist Recommendation:</strong> Using a combination of disease-level specialist overrides (e.g., "Pneumonia" → Pulmonologist) and symptom-pattern matching rules (e.g., chest pain + palpitations → Cardiologist), the engine determines the appropriate specialist category.</li>
+      <li><strong>Doctor and Hospital Discovery:</strong> The platform queries verified doctor profiles filtered by the recommended specialization and surfaces nearby hospitals with emergency bed data. Hospital locations are plotted on interactive maps using OpenStreetMap.</li>
+      <li><strong>Appointment Booking:</strong> Patients can book consultation slots directly through the platform. Appointments flow through a role-based workflow: patients request, doctors approve or reschedule, and admins manage facility-wide operations.</li>
+      <li><strong>Emergency Support:</strong> For critical severity scores, the platform provides one-tap SOS alerts, surfaces the nearest hospitals with emergency capacity, and displays pre-configured emergency contacts.</li>
+    </ul>
+  </div>
+
+  <!-- ================= PAGE 3 ================= -->
+  <div class="page-section pb-page3" id="page-3">
+    <h2 id="4-objectives"><span class="section-num">04</span> Objectives</h2>
+    <p>Our goal is to build an inclusive and efficient system that removes friction in finding care:</p>
+    <ul>
+      <li><strong>Reduce specialist discovery time</strong> from an average of 3–4 misdirected visits to a single informed consultation by mapping symptom clusters to the correct medical specialty.</li>
+      <li><strong>Surface real-time hospital data</strong> including facility type, location, ratings, and emergency bed availability for ABDM-registered institutions.</li>
+      <li><strong>Provide explainable health analysis</strong> where every diagnosis includes confidence scores, severity assessments, matched symptoms, and actionable precautions — not opaque predictions.</li>
+      <li><strong>Enable structured appointment workflows</strong> with role-based access control for patients, doctors, and administrators.</li>
+      <li><strong>Deliver emergency preparedness tools</strong> including SOS alerts, emergency contact management, and nearest-facility routing.</li>
+    </ul>
+
+    <h2 id="5-system-overview"><span class="section-num">05</span> System Overview</h2>
+    <p>MedHome is organized into eight core modules, each addressing a specific user need:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Module</th>
+          <th>Core Functionality</th>
+          <th>Key Technology</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Landing Page</strong></td>
+          <td>Value proposition, quick diagnostic entry, premium theme toggle</td>
+          <td>React 19, Tailwind CSS</td>
+        </tr>
+        <tr>
+          <td><strong>AI Symptom Checker</strong></td>
+          <td>Symptom matching, severity analysis, specialist recommendation</td>
+          <td>PostgreSQL, Supabase Client</td>
+        </tr>
+        <tr>
+          <td><strong>Doctor Finder</strong></td>
+          <td>Specialization filtering, rating-based ranking, profile views</td>
+          <td>React 19, Supabase RPC</td>
+        </tr>
+        <tr>
+          <td><strong>Hospital Finder</strong></td>
+          <td>Interactive geographic plotting, filters, ICU bed toggle</td>
+          <td>Leaflet.js, OpenStreetMap</td>
+        </tr>
+        <tr>
+          <td><strong>User Dashboard</strong></td>
+          <td>AI reports logs, upcoming appointments, charts, saved items</td>
+          <td>SVG Rendering, Framer Motion</td>
+        </tr>
+        <tr>
+          <td><strong>Emergency SOS</strong></td>
+          <td>One-tap emergency trigger, proximity routing, alerts</td>
+          <td>Browser Geolocation API</td>
+        </tr>
+        <tr>
+          <td><strong>Appointments</strong></td>
+          <td>Request, rescheduling, approval state-machine</td>
+          <td>Supabase Real-time, DB Triggers</td>
+        </tr>
+        <tr>
+          <td><strong>Copilot Chat</strong></td>
+          <td>Interactive medical support and FAQs</td>
+          <td>React State, Context API</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="6-technology-stack"><span class="section-num">06</span> Technology Stack</h2>
+    <p>The platform is designed to be lightweight, cost-effective, and easy to deploy:</p>
+    <ul>
+      <li><strong>Frontend Core:</strong> React 19 and TypeScript 6.0 for building high-performance, type-safe interactive interfaces.</li>
+      <li><strong>Styling:</strong> Tailwind CSS 4.0 with custom color systems for premium aesthetics (Dark Mode defaults, glassmorphic filters).</li>
+      <li><strong>Backend-as-a-Service:</strong> Supabase providing PostgreSQL database hosting, JWT authentication, and real-time WebSockets.</li>
+      <li><strong>Mapping & GIS:</strong> OpenStreetMap tiles rendered via Leaflet.js for zero-cost, high-performance geographic visualization.</li>
+      <li><strong>Voice Recognition:</strong> Web Speech API for multilingual voice-to-text input (English & Hindi) without external API costs.</li>
+      <li><strong>Animations:</strong> Framer Motion 12.0 for micro-interactions, layout transitions, and slide-out panels.</li>
+    </ul>
+    <p><strong>Rationale:</strong> Leaflet.js and OpenStreetMap eliminate maps licensing costs. Supabase queries fallback to client-side localStorage synchronization, ensuring the platform remains functional during network drops.</p>
+  </div>
+
+  <!-- ================= PAGE 4 ================= -->
+  <div class="page-section pb-page4" id="page-4">
+    <h2 id="7-database-design"><span class="section-num">07</span> Database Design (Part 1)</h2>
+    <p>The data architecture is structured across ten relational tables in Supabase PostgreSQL. Below are the key table schemas:</p>
+    
+    <div class="schema-block">
+      <div class="schema-header">
+        <span class="schema-name">users</span>
+        <span class="schema-desc">Auth Profiles & Roles</span>
+      </div>
+      <ul class="schema-list">
+        <li><span>id <strong>(PK)</strong></span> <span class="schema-type">uuid</span></li>
+        <li><span>email</span> <span class="schema-type">text</span></li>
+        <li><span>full_name</span> <span class="schema-type">text</span></li>
+        <li><span>role</span> <span class="schema-type">text</span></li>
+        <li><span>created_at</span> <span class="schema-type">timestamp</span></li>
+      </ul>
+    </div>
+
+    <div class="schema-block">
+      <div class="schema-header">
+        <span class="schema-name">hospitals</span>
+        <span class="schema-desc">5,132+ ABDM Facility Records</span>
+      </div>
+      <ul class="schema-list">
+        <li><span>id <strong>(PK)</strong></span> <span class="schema-type">bigint</span></li>
+        <li><span>name</span> <span class="schema-type">text</span></li>
+        <li><span>state</span> <span class="schema-type">text</span></li>
+        <li><span>city</span> <span class="schema-type">text</span></li>
+        <li><span>address</span> <span class="schema-type">text</span></li>
+        <li><span>rating</span> <span class="schema-type">numeric</span></li>
+        <li><span>emergency_available</span> <span class="schema-type">boolean</span></li>
+        <li><span>latitude</span> <span class="schema-type">numeric</span></li>
+        <li><span>longitude</span> <span class="schema-type">numeric</span></li>
+        <li><span>phone</span> <span class="schema-type">text</span></li>
+      </ul>
+    </div>
+
+    <div class="schema-block">
+      <div class="schema-header">
+        <span class="schema-name">doctors</span>
+        <span class="schema-desc">1,000+ Verified Practitioner Profiles</span>
+      </div>
+      <ul class="schema-list">
+        <li><span>id <strong>(PK)</strong></span> <span class="schema-type">bigint</span></li>
+        <li><span>name</span> <span class="schema-type">text</span></li>
+        <li><span>specialization</span> <span class="schema-type">text</span></li>
+        <li><span>experience</span> <span class="schema-type">integer</span></li>
+        <li><span>rating</span> <span class="schema-type">numeric</span></li>
+        <li><span>qualification</span> <span class="schema-type">text</span></li>
+        <li><span>hospital_id <strong>(FK -> hospitals.id)</strong></span> <span class="schema-type">bigint</span></li>
+        <li><span>available_today</span> <span class="schema-type">boolean</span></li>
+      </ul>
+    </div>
+
+    <div class="schema-block">
+      <div class="schema-header">
+        <span class="schema-name">appointments</span>
+        <span class="schema-desc">Consultation Booking Lifecycle</span>
+      </div>
+      <ul class="schema-list">
+        <li><span>id <strong>(PK)</strong></span> <span class="schema-type">bigint</span></li>
+        <li><span>user_id <strong>(FK -> users.id)</strong></span> <span class="schema-type">uuid</span></li>
+        <li><span>doctor_id <strong>(FK -> doctors.id)</strong></span> <span class="schema-type">bigint</span></li>
+        <li><span>appointment_date</span> <span class="schema-type">date</span></li>
+        <li><span>appointment_time</span> <span class="schema-type">text</span></li>
+        <li><span>status</span> <span class="schema-type">text</span></li>
+        <li><span>created_at</span> <span class="schema-type">timestamp</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ================= PAGE 5 ================= -->
+  <div class="page-section pb-page5" id="page-5">
+    <h2>Database Design (Part 2)</h2>
+    <div class="schema-block">
+      <div class="schema-header">
+        <span class="schema-name">ai_reports</span>
+        <span class="schema-desc">Diagnostic History Storage</span>
+      </div>
+      <ul class="schema-list">
+        <li><span>id <strong>(PK)</strong></span> <span class="schema-type">bigint</span></li>
+        <li><span>user_id <strong>(FK -> users.id)</strong></span> <span class="schema-type">uuid</span></li>
+        <li><span>predicted_disease</span> <span class="schema-type">text</span></li>
+        <li><span>severity</span> <span class="schema-type">text</span></li>
+        <li><span>specialist</span> <span class="schema-type">text</span></li>
+        <li><span>confidence</span> <span class="schema-type">integer</span></li>
+        <li><span>precautions</span> <span class="schema-type">jsonb</span></li>
+        <li><span>symptoms</span> <span class="schema-type">text</span></li>
+        <li><span>created_at</span> <span class="schema-type">timestamp</span></li>
+      </ul>
+    </div>
+
+    <div class="schema-block">
+      <div class="schema-header">
+        <span class="schema-name">disease_symptoms</span>
+        <span class="schema-desc">642 Clinical Mappings</span>
+      </div>
+      <ul class="schema-list">
+        <li><span>id <strong>(PK)</strong></span> <span class="schema-type">bigint</span></li>
+        <li><span>disease</span> <span class="schema-type">text</span></li>
+        <li><span>symptom</span> <span class="schema-type">text</span></li>
+      </ul>
+    </div>
+
+    <div class="schema-block">
+      <div class="schema-header">
+        <span class="schema-name">symptom_severity</span>
+        <span class="schema-desc">133 Severity Risk Factors</span>
+      </div>
+      <ul class="schema-list">
+        <li><span>id <strong>(PK)</strong></span> <span class="schema-type">bigint</span></li>
+        <li><span>symptom <strong>(Unique)</strong></span> <span class="schema-type">text</span></li>
+        <li><span>weight</span> <span class="schema-type">integer</span></li>
+      </ul>
+    </div>
+
+    <h2 id="8-system-architecture"><span class="section-num">08</span> System Architecture</h2>
+    <p>The platform decouples request layers to guarantee offline usability and sub-second page loads:</p>
+    <div class="flow-diagram">
+      <div class="flow-code">[Users] (Patients, Doctors, Admins)
+   │
+   ▼
+[Client Frontend App] (React 19, TypeScript, Tailwind, SVG Charts & Maps)
+   │
+   ▼  (Auth Handshake & Subscriptions)
+[Supabase Backend Layer] (JWT Token Verification, Row Level Security)
+   │
+   ▼  (Authenticated SQL)
+[PostgreSQL Database] (10 tables, Custom B-Tree Indexes)
+   │
+   ▼  (Diagnostic Engines)
+[Healthcare Intelligence AI Engine] (Disease Scorer, Specialist Rule Router)
+   │
+   ▼  (Public API Integrations)
+[External Services] (OSM GIS, Geolocation, Voice STT)</div>
+    </div>
+  </div>
+
+  <!-- ================= PAGE 6 ================= -->
+  <div class="page-section pb-page6" id="page-6">
+    <h2 id="9-ai-health-analysis-engine"><span class="section-num">09</span> AI Health Analysis Engine</h2>
+    <p>The Symptom Checker utilizes a transparent, rule-driven clinical knowledge base compiled from real-world epidemiological charts. The backend executes a 9-stage analysis:</p>
+    <ol>
+      <li><strong>Symptom Ingestion:</strong> Ingests patient symptoms via text or voice.</li>
+      <li><strong>Symptom Extraction:</strong> Tokenizes inputs and normalizes them (e.g. "headache" -> `headache`).</li>
+      <li><strong>Disease Matching:</strong> Filters `disease_symptoms` for rows sharing at least 2 input symptoms.</li>
+      <li><strong>Confidence Score calculation:</strong> Computed as:
+        <code style="display:block;margin:10px 0;padding:8px;background:var(--bg2);">Confidence = Min(Round((MatchedSymptoms / TotalUserSymptoms) * 100), 98)</code>
+        *Capped at 98% because symptom checks cannot replace lab tests or clinical imaging.*
+      </li>
+      <li><strong>Triage Severity Calculation:</strong> Aggregates matching symptom weights from `symptom_severity`:
+        <ul>
+          <li><strong>Critical (Score &ge; 29):</strong> Requires immediate emergency department admission.</li>
+          <li><strong>High (Score 19 - 28):</strong> Requires urgent specialist care.</li>
+          <li><strong>Moderate (Score 9 - 18):</strong> Requires clinical consultation.</li>
+          <li><strong>Low (Score 0 - 8):</strong> Recommends home rest and monitoring.</li>
+        </ul>
+      </li>
+      <li><strong>Specialist Recommendation Routing:</strong> Specialist mapping combines disease-level overrides with symptom-pattern match groups:
+        <ul>
+          <li><em>Disease Override:</em> Direct lookup (e.g. Heart Attack -> Cardiologist, Migraine -> Neurologist).</li>
+          <li><em>Pattern Matching:</em> Logical groups (e.g. stomach pain + acidity -> Gastroenterologist).</li>
+        </ul>
+      </li>
+      <li><strong>Doctor Discovery:</strong> Queries `doctors` for matching specialties, ranking by ratings.</li>
+      <li><strong>Hospital Referral:</strong> Suggests clinics. If severity is Critical/High, hospital search filters for `emergency_available = true`.</li>
+      <li><strong>EHR Persistence:</strong> Saves diagnostic outcomes to `ai_reports` on Supabase.</li>
+    </ol>
+
+    <h2 id="10-implementation-details"><span class="section-num">10</span> Implementation Details</h2>
+    <ul>
+      <li><strong>Bounding Box Map Pruning:</strong> To prevent DOM lag when mapping 5,132 facilities, Leaflet viewport bounds are monitored dynamically. Custom markers are only appended to the map if they fall within the visible bounding box (`map.getBounds().contains()`).</li>
+      <li><strong>Map container Layout Fix:</strong> Caching bounds on hidden tabs causes Leaflet to collapse map dimensions. We attach a timeout trigger calling `map.invalidateSize()` right before marker drawing to refresh sizing.</li>
+      <li><strong>Distance Calculations:</strong> Computed client-side using the Haversine formula to rank hospitals by closest proximity (kilometers).</li>
+    </ul>
+
+    <h2 id="11-key-features"><span class="section-num">11</span> Key Features</h2>
+    <ul>
+      <li><strong>Multilingual Voice Input:</strong> Dictate symptoms in Hindi or English. Visualized with a live SVG audio waveform canvas.</li>
+      <li><strong>Explainable Diagnostics:</strong> Reports clearly list matched symptoms, alternative conditions, risk assessments, and recovery guidelines.</li>
+      <li><strong>Interactive Leaflet Map:</strong> View hospital clusters, toggle ICU emergency vacancies, and filter by city/state.</li>
+      <li><strong>Role-Based Workflows:</strong> Scoped dashboards for Patients, Doctors, and Administrators.</li>
+      <li><strong>Analytics Dashboard:</strong> Displays disease distributions, frequent symptoms, and monthly bookings using responsive SVG graphics.</li>
+    </ul>
+  </div>
+
+  <!-- ================= PAGE 7 ================= -->
+  <div class="page-section pb-page7" id="page-7">
+    <h2 id="12-user-experience-design"><span class="section-num">12</span> User Experience Design</h2>
+    <p>The MedHome user interface is built around premium, professional design aesthetics:</p>
+    <ul>
+      <li><strong>Harmonious Palette:</strong> Sleek dark background (`#0A0A0C`), primary crimson red branding (`#E53935`), emerald green success tones (`#10B981`), and soft border guidelines.</li>
+      <li><strong>Typography:</strong> Google Fonts Inter is imported for modern, readable content. Hierarchy is maintained with heavy-contrast headings.</li>
+      <li><strong>Glassmorphism:</strong> Navigation menus, popup cards, and panels use semi-transparent backdrops (`backdrop-filter: blur(20px)`) with thin white inner borders.</li>
+      <li><strong>Interactive State Transitions:</strong> Smooth micro-animations for hover states, checklist completions, and tab switches.</li>
+    </ul>
+
+    <h2 id="13-scalability"><span class="section-num">13</span> Scalability</h2>
+    <p><strong>Database Scalability:</strong> Write operations scale horizontally on Supabase PostgreSQL. Foreign key querying speeds are optimized via index trees:</p>
+    <pre><code>CREATE INDEX idx_doctors_specialization ON doctors(specialization);
+CREATE INDEX idx_appointments_user_id ON appointments(user_id);</code></pre>
+    <p><strong>Offline Sync Fallback:</strong> If database connection drops, data is automatically captured by localStorage, ensuring the frontend app remains functional offline.</p>
+
+    <h2 id="14-security-considerations"><span class="section-num">14</span> Security Considerations</h2>
+    <ul>
+      <li><strong>Row Level Security (RLS):</strong> Enabled on all Supabase tables. Users can only select or update rows matching their own `user_id`:
+        <pre><code>CREATE POLICY "Users can only view their own reports"
+  ON ai_reports FOR SELECT USING (auth.uid() = user_id);</code></pre>
+      </li>
+      <li><strong>JWT Session Management:</strong> Sessions are secured with signed JSON Web Tokens refreshed automatically by the Supabase SDK.</li>
+      <li><strong>HIPAA Data Encryption:</strong> All database transmissions are encrypted over SSL/TLS (HTTPS/WSS) to protect sensitive diagnostic histories.</li>
+    </ul>
+
+    <h2 id="15-social-impact"><span class="section-num">15</span> Social Impact</h2>
+    <p>MedHome addresses the core challenge of healthcare fragmentation in developing countries. By mapping symptom clusters to the correct medical specialty and surfacing real-time emergency capacity, the platform reduces misdirected clinical visits, prevents triage overload, and saves critical minutes during emergencies. The integration of local STT voice recognition in regional languages ensures accessibility across diverse demographics.</p>
+
+    <h2 id="16-conclusion"><span class="section-num">16</span> Conclusion</h2>
+    <p>MedHome is a cohesive healthcare navigation ecosystem. By merging rule-based clinical intelligence with live registry datasets, geographic mapping, and structured appointment workflows, the platform bridges the gap between patient symptoms and treatment. Built with React 19, TypeScript, and Supabase, it is highly scalable, secure, and ready for deployment.</p>
+  </div>
+
+</div>
+
+</body>
+</html>

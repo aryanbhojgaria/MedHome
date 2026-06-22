@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedHome — System Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --red:#E53935;--red-accent:#FF6B6B;--red-deep:#B71C1C;
+  --red-soft:rgba(229,57,53,0.08);--red-border:rgba(229,57,53,0.2);
+  --bg:#060608;--bg2:#0C0C0F;--card:#101014;--card2:#16161A;
+  --border:rgba(255,255,255,0.06);--border-s:rgba(255,255,255,0.1);
+  --t1:#FFF;--t2:#8A8A95;--t3:#4A4A55;
+  --blue:#3B82F6;--green:#10B981;--amber:#F59E0B;--purple:#8B5CF6;--cyan:#06B6D4;--pink:#EC4899;
+}
+
+html,body{width:100%;height:100%;overflow-x:hidden;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  -webkit-font-smoothing:antialiased;background:var(--bg);color:var(--t1);
+}
+
+/* ====== BACKGROUND ====== */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%,rgba(229,57,53,0.07) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 90%,rgba(59,130,246,0.04) 0%,transparent 50%),
+    radial-gradient(ellipse 50% 50% at 10% 60%,rgba(139,92,246,0.03) 0%,transparent 50%);
+}
+
+/* ====== TOOLBAR ====== */
+.toolbar{
+  position:fixed;top:0;left:0;right:0;height:48px;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px;
+  background:rgba(6,6,8,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+}
+.toolbar-left{display:flex;align-items:center;gap:14px}
+.toolbar-logo{font-size:14px;font-weight:900;letter-spacing:-0.03em}
+.toolbar-sep{width:1px;height:16px;background:var(--border-s)}
+.toolbar-title{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:0.08em}
+.tg{background:linear-gradient(135deg,#E53935,#FF6B6B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.toolbar-btn{
+  padding:6px 14px;border-radius:7px;font-size:10px;font-weight:700;
+  cursor:pointer;border:none;font-family:inherit;transition:all .2s;
+  background:linear-gradient(135deg,#E53935,#FF6B6B);color:#fff;
+  box-shadow:0 2px 8px rgba(229,57,53,0.25);
+}
+.toolbar-btn:hover{box-shadow:0 4px 16px rgba(229,57,53,0.4);transform:translateY(-1px)}
+
+/* ====== CANVAS ====== */
+.canvas{
+  position:relative;z-index:1;width:100%;max-width:1200px;
+  margin:0 auto;padding:72px 32px 60px;
+}
+
+/* ====== HEADER ====== */
+.header{text-align:center;margin-bottom:48px}
+.header h1{font-size:28px;font-weight:900;letter-spacing:-0.04em;margin-bottom:4px}
+.header p{font-size:12px;color:var(--t3);font-weight:500;letter-spacing:0.03em}
+
+/* ====== FLOW ARROW (vertical) ====== */
+.flow-arrow{
+  display:flex;flex-direction:column;align-items:center;gap:0;
+  margin:0 auto;width:2px;height:32px;position:relative;
+}
+.flow-arrow::before{
+  content:'';width:2px;height:100%;
+  background:linear-gradient(180deg,rgba(229,57,53,0.5),rgba(229,57,53,0.15));
+  border-radius:2px;
+}
+.flow-arrow::after{
+  content:'';position:absolute;bottom:-4px;
+  width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;
+  border-top:6px solid rgba(229,57,53,0.4);
+}
+.flow-label{
+  position:absolute;right:-60px;top:50%;transform:translateY(-50%);
+  font-size:8px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:0.08em;
+  white-space:nowrap;
+}
+
+/* ====== LAYER ====== */
+.layer{
+  position:relative;border-radius:16px;padding:1px;margin-bottom:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));
+}
+.layer-inner{
+  background:var(--card);border-radius:15px;padding:24px 28px;
+  position:relative;overflow:hidden;
+}
+.layer-inner::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 100% 60% at 50% -20%,rgba(229,57,53,0.03) 0%,transparent 60%);
+}
+.layer-tag{
+  display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;
+  font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;
+  margin-bottom:14px;
+}
+.layer-tag-red{background:var(--red-soft);color:var(--red-accent);border:1px solid var(--red-border)}
+.layer-tag-blue{background:rgba(59,130,246,0.08);color:#60A5FA;border:1px solid rgba(59,130,246,0.15)}
+.layer-tag-green{background:rgba(16,185,129,0.08);color:#34D399;border:1px solid rgba(16,185,129,0.15)}
+.layer-tag-purple{background:rgba(139,92,246,0.08);color:#A78BFA;border:1px solid rgba(139,92,246,0.15)}
+.layer-tag-amber{background:rgba(245,158,11,0.08);color:#FBBF24;border:1px solid rgba(245,158,11,0.15)}
+.layer-tag-cyan{background:rgba(6,182,212,0.08);color:#22D3EE;border:1px solid rgba(6,182,212,0.15)}
+
+.layer-title{font-size:16px;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px}
+.layer-desc{font-size:11px;color:var(--t2);margin-bottom:16px;line-height:1.5}
+
+/* ====== NODE CARDS ====== */
+.nodes{display:flex;flex-wrap:wrap;gap:8px}
+.node{
+  display:flex;align-items:center;gap:7px;padding:8px 12px;
+  border-radius:9px;background:rgba(255,255,255,0.03);border:1px solid var(--border);
+  font-size:11px;font-weight:600;color:var(--t1);transition:all .2s;
+  cursor:default;
+}
+.node:hover{border-color:var(--red-border);background:rgba(229,57,53,0.04);transform:translateY(-1px)}
+.node-icon{
+  width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;
+}
+
+/* ====== USER AVATARS ====== */
+.users-row{display:flex;justify-content:center;gap:24px;margin-bottom:0}
+.user-pill{
+  display:flex;align-items:center;gap:8px;padding:10px 18px;
+  border-radius:12px;background:var(--card);border:1px solid var(--border);
+  font-size:12px;font-weight:600;color:var(--t1);
+}
+.user-avatar{
+  width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-size:15px;
+}
+
+/* ====== DB TABLE GRID ====== */
+.db-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.db-cell{
+  padding:8px 10px;border-radius:7px;text-align:center;
+  background:rgba(255,255,255,0.02);border:1px solid var(--border);
+  font-size:10px;font-weight:700;color:var(--t2);
+  font-family:'SF Mono','Fira Code','Consolas',monospace;
+  transition:all .2s;cursor:default;
+}
+.db-cell:hover{border-color:rgba(16,185,129,0.3);color:#34D399;background:rgba(16,185,129,0.04)}
+.db-cell-label{font-size:7px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;font-family:'Inter',sans-serif}
+
+/* ====== ENGINE CARDS ====== */
+.engine-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.engine-card{
+  padding:12px 14px;border-radius:10px;
+  background:rgba(139,92,246,0.04);border:1px solid rgba(139,92,246,0.1);
+  transition:all .2s;cursor:default;
+}
+.engine-card:hover{border-color:rgba(139,92,246,0.25);transform:translateY(-1px)}
+.engine-icon{font-size:16px;margin-bottom:5px}
+.engine-name{font-size:11px;font-weight:700;color:var(--t1);margin-bottom:1px}
+.engine-desc{font-size:9px;color:var(--t3);line-height:1.4}
+
+/* ====== EXTERNAL SERVICES ====== */
+.ext-row{display:flex;gap:10px;flex-wrap:wrap}
+.ext-card{
+  flex:1;min-width:160px;padding:14px 16px;border-radius:10px;
+  background:rgba(6,182,212,0.03);border:1px solid rgba(6,182,212,0.1);
+  display:flex;align-items:center;gap:10px;transition:all .2s;
+}
+.ext-card:hover{border-color:rgba(6,182,212,0.25);transform:translateY(-1px)}
+.ext-icon{font-size:20px;flex-shrink:0}
+.ext-name{font-size:11px;font-weight:700;color:var(--t1)}
+.ext-desc{font-size:9px;color:var(--t3)}
+
+/* ====== RESPONSE ARROW ====== */
+.response-bar{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  margin:24px auto 0;padding:10px 20px;border-radius:10px;
+  background:rgba(229,57,53,0.04);border:1px solid rgba(229,57,53,0.12);
+  max-width:500px;
+}
+.response-bar-icon{font-size:14px}
+.response-bar-text{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:0.06em}
+
+/* ====== FOOTER ====== */
+.footer{
+  text-align:center;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);
+}
+.footer p{font-size:10px;color:var(--t3);font-weight:500}
+
+/* ====== PRINT ====== */
+@media print{
+  @page{size:landscape;margin:12mm}
+  body{background:#fff!important;color:#111!important;
+    -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;
+  }
+  body::before{display:none}
+  .toolbar{display:none!important}
+  .canvas{padding-top:0!important;max-width:100%}
+  .layer-inner{background:#FAFAFA!important;border:1px solid #E5E5E5!important}
+  .node{background:#F5F5F5!important;border-color:#E0E0E0!important;color:#111!important}
+  .node:hover{transform:none!important}
+  .db-cell{background:#F5F5F5!important;border-color:#E0E0E0!important;color:#333!important}
+  .engine-card{background:#F3F0FF!important;border-color:#D4C8F5!important}
+  .engine-name{color:#111!important}
+  .ext-card{background:#F0FAFB!important;border-color:#C8E6EC!important}
+  .ext-name{color:#111!important}
+  h1,.layer-title{color:#111!important}
+  .tg{-webkit-text-fill-color:#E53935!important;color:#E53935!important;background:none!important}
+  .user-pill{background:#F5F5F5!important;border-color:#E0E0E0!important;color:#111!important}
+  .response-bar{background:#FFF0F0!important;border-color:#FFCDD2!important}
+  .flow-arrow::before{background:linear-gradient(180deg,#E53935,#FFCDD2)!important}
+  .flow-arrow::after{border-top-color:#E53935!important}
+}
+</style>
+</head>
+<body>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <div class="toolbar-left">
+    <div class="toolbar-logo">Med<span class="tg">Home</span></div>
+    <div class="toolbar-sep"></div>
+    <div class="toolbar-title">System Architecture Diagram</div>
+  </div>
+  <button class="toolbar-btn" onclick="window.print()">↓ Export PDF</button>
+</div>
+
+<div class="canvas">
+
+<!-- Header -->
+<div class="header">
+  <h1>Med<span class="tg">Home</span> System Architecture</h1>
+  <p>AI-Powered Healthcare Navigation Platform &nbsp;·&nbsp; Technical Architecture Overview</p>
+</div>
+
+<!-- ═══════════ LAYER 1: USERS ═══════════ -->
+<div class="users-row">
+  <div class="user-pill">
+    <div class="user-avatar" style="background:rgba(229,57,53,0.1)">👤</div>
+    <div>
+      <div style="font-weight:800">Patients</div>
+      <div style="font-size:9px;color:var(--t3)">Symptom Input · Appointments · Emergency</div>
+    </div>
+  </div>
+  <div class="user-pill">
+    <div class="user-avatar" style="background:rgba(59,130,246,0.1)">🩺</div>
+    <div>
+      <div style="font-weight:800">Doctors</div>
+      <div style="font-size:9px;color:var(--t3)">Consultations · Approvals · Scheduling</div>
+    </div>
+  </div>
+  <div class="user-pill">
+    <div class="user-avatar" style="background:rgba(139,92,246,0.1)">⚙️</div>
+    <div>
+      <div style="font-weight:800">Administrators</div>
+      <div style="font-size:9px;color:var(--t3)">System Mgmt · Analytics · ICU Tracking</div>
+    </div>
+  </div>
+</div>
+
+<!-- Arrow -->
+<div class="flow-arrow" style="height:28px"><span class="flow-label">HTTP / WebSocket</span></div>
+
+<!-- ═══════════ LAYER 2: FRONTEND ═══════════ -->
+<div class="layer">
+  <div class="layer-inner">
+    <div class="layer-tag layer-tag-red">⚛ Client Layer — Frontend Application</div>
+    <div class="layer-title">MedHome Frontend</div>
+    <div class="layer-desc">React 19 · TypeScript 6.0 · Tailwind CSS 4.3 · Framer Motion 12 · Vite 8.0</div>
+    <div class="nodes">
+      <div class="node"><div class="node-icon" style="background:rgba(229,57,53,0.1)">🏠</div>Landing Page</div>
+      <div class="node"><div class="node-icon" style="background:rgba(139,92,246,0.1)">🧠</div>AI Symptom Checker</div>
+      <div class="node"><div class="node-icon" style="background:rgba(59,130,246,0.1)">🩺</div>Doctor Finder</div>
+      <div class="node"><div class="node-icon" style="background:rgba(16,185,129,0.1)">🏥</div>Hospital Finder</div>
+      <div class="node"><div class="node-icon" style="background:rgba(245,158,11,0.1)">📊</div>Dashboard</div>
+      <div class="node"><div class="node-icon" style="background:rgba(255,59,48,0.12)">🚨</div>Emergency SOS</div>
+      <div class="node"><div class="node-icon" style="background:rgba(6,182,212,0.1)">💬</div>MedHome Copilot</div>
+      <div class="node"><div class="node-icon" style="background:rgba(236,72,153,0.1)">📅</div>Appointments</div>
+      <div class="node"><div class="node-icon" style="background:rgba(245,158,11,0.1)">📋</div>AI Reports</div>
+    </div>
+  </div>
+</div>
+
+<!-- Arrow -->
+<div class="flow-arrow" style="height:28px"><span class="flow-label">Supabase SDK</span></div>
+
+<!-- ═══════════ LAYER 3: SUPABASE BACKEND ═══════════ -->
+<div class="layer">
+  <div class="layer-inner">
+    <div class="layer-tag layer-tag-blue">🔐 Backend Layer — Supabase</div>
+    <div class="layer-title">Authentication & Session Management</div>
+    <div class="layer-desc">Supabase Auth · JWT Tokens · bcrypt Hashing · Role-Based Access Control (Patient / Doctor / Admin)</div>
+    <div class="nodes">
+      <div class="node"><div class="node-icon" style="background:rgba(59,130,246,0.1)">🔑</div>Login / Signup</div>
+      <div class="node"><div class="node-icon" style="background:rgba(59,130,246,0.1)">🛡️</div>Row Level Security</div>
+      <div class="node"><div class="node-icon" style="background:rgba(59,130,246,0.1)">🔄</div>Session Management</div>
+      <div class="node"><div class="node-icon" style="background:rgba(59,130,246,0.1)">👥</div>Role Assignment</div>
+    </div>
+  </div>
+</div>
+
+<!-- Arrow -->
+<div class="flow-arrow" style="height:28px"><span class="flow-label">Authenticated Queries</span></div>
+
+<!-- ═══════════ LAYER 4: DATABASE ═══════════ -->
+<div class="layer">
+  <div class="layer-inner">
+    <div class="layer-tag layer-tag-green">🗄️ Data Layer — PostgreSQL (Supabase)</div>
+    <div class="layer-title">Database Schema</div>
+    <div class="layer-desc">9 tables · Real-time subscriptions · Foreign key relationships · localStorage fallback</div>
+    <div class="db-grid">
+      <div class="db-cell">users<div class="db-cell-label">Auth & Profiles</div></div>
+      <div class="db-cell">hospitals<div class="db-cell-label">5,132+ Records</div></div>
+      <div class="db-cell">doctors<div class="db-cell-label">1,000+ Profiles</div></div>
+      <div class="db-cell">appointments<div class="db-cell-label">Booking Lifecycle</div></div>
+      <div class="db-cell">ai_reports<div class="db-cell-label">Diagnosis History</div></div>
+      <div class="db-cell">emergency_contacts<div class="db-cell-label">User-Scoped</div></div>
+      <div class="db-cell">disease_symptoms<div class="db-cell-label">642 Mappings</div></div>
+      <div class="db-cell">disease_descriptions<div class="db-cell-label">41 Modules</div></div>
+      <div class="db-cell">precautions<div class="db-cell-label">Recovery Plans</div></div>
+      <div class="db-cell">symptom_severity<div class="db-cell-label">133 Indicators</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Arrow -->
+<div class="flow-arrow" style="height:28px"><span class="flow-label">Knowledge Queries</span></div>
+
+<!-- ═══════════ LAYER 5: HEALTHCARE INTELLIGENCE ═══════════ -->
+<div class="layer">
+  <div class="layer-inner">
+    <div class="layer-tag layer-tag-purple">🧬 Healthcare Intelligence Layer — AI Engine</div>
+    <div class="layer-title">Healthcare Analysis Engine</div>
+    <div class="layer-desc">9-stage pipeline · Explainable AI · Confidence scoring (capped at 98%) · Session-cached disease maps</div>
+    <div class="engine-grid">
+      <div class="engine-card">
+        <div class="engine-icon">🔬</div>
+        <div class="engine-name">Disease Matching</div>
+        <div class="engine-desc">Scores diseases by symptom overlap count against 642 mappings</div>
+      </div>
+      <div class="engine-card">
+        <div class="engine-icon">📊</div>
+        <div class="engine-name">Severity Scoring</div>
+        <div class="engine-desc">Sums symptom weights → Low / Moderate / High / Critical</div>
+      </div>
+      <div class="engine-card">
+        <div class="engine-icon">🎯</div>
+        <div class="engine-name">Specialist Mapping</div>
+        <div class="engine-desc">40+ disease overrides + 11 symptom-pattern rule sets</div>
+      </div>
+      <div class="engine-card">
+        <div class="engine-icon">🩺</div>
+        <div class="engine-name">Doctor Recommendation</div>
+        <div class="engine-desc">Filtered by specialist, ranked by rating, top 5</div>
+      </div>
+      <div class="engine-card">
+        <div class="engine-icon">🏥</div>
+        <div class="engine-name">Hospital Recommendation</div>
+        <div class="engine-desc">Emergency-first for Critical/High severity cases</div>
+      </div>
+      <div class="engine-card">
+        <div class="engine-icon">📋</div>
+        <div class="engine-name">Report Generation</div>
+        <div class="engine-desc">Explainable AI report with precautions & confidence</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Arrow -->
+<div class="flow-arrow" style="height:28px"><span class="flow-label">External APIs</span></div>
+
+<!-- ═══════════ LAYER 6: EXTERNAL SERVICES ═══════════ -->
+<div class="layer">
+  <div class="layer-inner">
+    <div class="layer-tag layer-tag-cyan">🌐 External Services Layer</div>
+    <div class="layer-title">Third-Party Integrations</div>
+    <div class="layer-desc">Open-source services · No API key dependencies · Zero usage cost</div>
+    <div class="ext-row">
+      <div class="ext-card">
+        <div class="ext-icon">🗺️</div>
+        <div>
+          <div class="ext-name">OpenStreetMap + Leaflet.js</div>
+          <div class="ext-desc">Interactive hospital maps with 5,132+ markers across India</div>
+        </div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-icon">📍</div>
+        <div>
+          <div class="ext-name">Geolocation Services</div>
+          <div class="ext-desc">Browser Geolocation API for proximity-based hospital routing</div>
+        </div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-icon">🎤</div>
+        <div>
+          <div class="ext-name">Web Speech API</div>
+          <div class="ext-desc">Voice symptom input in English & Hindi with waveform visualization</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Response Flow -->
+<div class="response-bar">
+  <div class="response-bar-icon">↩️</div>
+  <div class="response-bar-text">Response Flow: AI Report · Matched Doctors · Recommended Hospitals · Severity Assessment → User Dashboard</div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>MedHome — AI-Powered Healthcare. Built for Every Home. &nbsp;·&nbsp; React · TypeScript · Supabase · OpenStreetMap</p>
+</div>
+
+</div><!-- end canvas -->
+
+</body>
+</html>
